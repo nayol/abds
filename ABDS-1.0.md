@@ -3,7 +3,7 @@
 **Version**: 1.0
 **Status**: Draft
 **Date**: 2026-05-05
-**Authors**: Kaloyan Tanev, Claude (Anthropic)
+**Authors**: Kaloyan Tanev
 
 ---
 
