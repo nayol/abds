@@ -1,26 +1,27 @@
 # ABDS - Agent Base Directory Specification
 
-**A standard for organizing documentation and knowledge in AI agent development environments.**
+> **A universal standard for organizing documentation and knowledge in AI agent development environments**
 
-Like XDG for `~/.config/`, but for AI agent workspaces.
-
----
-
-## What is ABDS?
-
-ABDS is an **open specification** (not a tool) that defines:
-
-- **Where** documentation lives (standard directory layout)
-- **How** to organize knowledge (4-layer documentation system)
-- **What** formats to use (markdown, YAML frontmatter, standard templates)
-
-**Think**: XDG Base Directory Specification, but for AI agents.
+[![License: CC0](https://img.shields.io/badge/License-CC0-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.0--draft-orange.svg)](ABDS-1.0.md)
 
 ---
 
-## The Problem
+## 🎯 What is ABDS?
 
-Working with AI agents (Cursor, Aider, Windsurf, etc.) leads to:
+ABDS is an **open specification** that defines:
+
+- 📁 **Where** documentation lives (standard directory layout)
+- 📚 **How** to organize knowledge (4-layer documentation system)
+- 📝 **What** formats to use (markdown, YAML frontmatter)
+
+**Like XDG for `~/.config/`, but for AI agent workspaces.**
+
+---
+
+## ❓ The Problem
+
+Working with AI agents (Cursor, Aider, Windsurf, etc.) creates chaos:
 
 - 📂 **Scattered documentation**: README, CLAUDE.md, random docs/ files
 - 🤔 **Lost context**: "What did we do last week? Why that decision?"
@@ -30,31 +31,35 @@ Working with AI agents (Cursor, Aider, Windsurf, etc.) leads to:
 
 ---
 
-## The Solution
+## ✅ The Solution
 
 ABDS provides a **standard structure**:
 
-```
-Global (cross-project knowledge):
-~/.abds/
-├── learnings/              # Searchable knowledge base
-│   ├── CATALOG.md          # Auto-generated index
-│   ├── database/
-│   ├── ui/
-│   └── debugging/
-└── plans/                  # Implementation plans
+### Global (cross-project knowledge)
 
-Local (project-specific):
+```bash
+~/.abds/
+  ├─ learnings/              # Searchable knowledge base
+  │   ├─ CATALOG.md          # Auto-generated index
+  │   ├─ database/
+  │   ├─ ui/
+  │   └─ debugging/
+  └─ plans/                  # Implementation plans
+```
+
+### Local (project-specific)
+
+```bash
 my-project/.abds/
-└── docs/
-    ├── PROJECT-STATE.md    # 2-min project overview
-    ├── auth/
-    │   ├── STATE.md        # Current state
-    │   ├── CLAUDE.md       # Architecture
-    │   └── sessions/       # Work history
-    └── database/
-        ├── STATE.md
-        └── sessions/
+  └─ docs/
+      ├─ PROJECT-STATE.md    # 2-min project overview
+      ├─ auth/
+      │   ├─ STATE.md        # Current state
+      │   ├─ CLAUDE.md       # Architecture
+      │   └─ sessions/       # Work history
+      └─ database/
+          ├─ STATE.md
+          └─ sessions/
 ```
 
 ---
@@ -93,13 +98,12 @@ Always know where to find:
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
 ### 1. Create Global Directory
 
 ```bash
-mkdir -p ~/.abds/learnings
-mkdir -p ~/.abds/plans
+mkdir -p ~/.abds/learnings ~/.abds/plans
 ```
 
 ### 2. Create Project Structure
@@ -107,8 +111,11 @@ mkdir -p ~/.abds/plans
 ```bash
 cd my-project
 mkdir -p .abds/docs
+```
 
-# Create PROJECT-STATE.md
+### 3. Create PROJECT-STATE.md
+
+```bash
 cat > .abds/docs/PROJECT-STATE.md << 'EOF'
 # Project State
 
@@ -128,7 +135,7 @@ cat > .abds/docs/PROJECT-STATE.md << 'EOF'
 EOF
 ```
 
-### 3. Add Feature Documentation
+### 4. Add Feature Documentation
 
 ```bash
 mkdir -p .abds/docs/database
@@ -148,7 +155,7 @@ cat > .abds/docs/database/STATE.md << 'EOF'
 EOF
 ```
 
-### 4. Capture Learnings
+### 5. Capture Learnings
 
 ```bash
 mkdir -p ~/.abds/learnings/database
@@ -179,11 +186,11 @@ await client.rpc('my_function', {...})
 EOF
 ```
 
-**You're now ABDS-compliant! ⭐**
+**✨ You're now ABDS-compliant! ⭐**
 
 ---
 
-## The Four Documentation Layers
+## 📊 The Four Documentation Layers
 
 ABDS organizes documentation into 4 layers, each serving a different time scale:
 
@@ -201,7 +208,7 @@ ABDS organizes documentation into 4 layers, each serving a different time scale:
 
 ---
 
-## Compliance Levels
+## 🏆 Compliance Levels
 
 ### ⭐ Level 1: Minimal
 - Global: `~/.abds/learnings/` exists
@@ -220,9 +227,9 @@ ABDS organizes documentation into 4 layers, each serving a different time scale:
 
 ---
 
-## Full Specification
+## 📖 Full Specification
 
-See **[ABDS-1.0.md](ABDS-1.0.md)** for complete specification including:
+👉 **[Read ABDS-1.0.md](ABDS-1.0.md)** for complete specification including:
 
 - Directory structure requirements
 - File naming conventions
@@ -233,7 +240,7 @@ See **[ABDS-1.0.md](ABDS-1.0.md)** for complete specification including:
 
 ---
 
-## Examples
+## 💡 Examples
 
 ### Minimal Project (Level 1 ⭐)
 
