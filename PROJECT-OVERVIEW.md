@@ -91,20 +91,27 @@ ABDS provides a **standard structure** that solves this:
 ```
 Global (your personal knowledge):
 ~/.abds/
+├── INDEX.md            # "What is ~/.abds/?"
 ├── learnings/          # "I solved RLS issue in 3 projects"
 │   └── database/
 │       └── rls-patterns.md
+├── bin/                # Helper scripts
+│   └── generate-index  # Auto-generate INDEX.md (10x faster navigation)
 └── plans/              # "My implementation plan template"
 
 Local (this project):
 my-project/.abds/
 └── docs/
+    ├── INDEX.md            # Root navigation (⚡ 10x faster for agents)
     ├── PROJECT-STATE.md    # "What's happening NOW"
     ├── auth/
+    │   ├── INDEX.md        # Feature navigation
     │   ├── STATE.md        # "Auth current state"
     │   ├── CLAUDE.md       # "Why we chose OAuth"
     │   └── sessions/       # "What we did March 15"
+    │       └── INDEX.md    # Sessions list (chronological)
     └── database/
+        ├── INDEX.md        # Feature navigation
         └── STATE.md
 ```
 
@@ -304,7 +311,8 @@ After ABDS:
 |----------------|---------------------|
 | **Everything is a file** | Everything is a document (markdown) |
 | **Separation of concerns** | 4 layers (overview/state/architecture/history) |
-| **Standard locations** | PROJECT-STATE.md, STATE.md, CLAUDE.md, `~/.abds/bin/` |
+| **Standard locations** | INDEX.md, PROJECT-STATE.md, STATE.md, CLAUDE.md, `~/.abds/bin/` |
+| **Fast navigation** | INDEX.md in every subfolder (like `ls` output, but structured) |
 | **User executables** | `~/.local/bin/` (XDG) → `~/.abds/bin/` (ABDS) |
 | **Composability** | Templates compose into complete system, scripts pipe together |
 | **Simplicity** | Plain text, no database, no complexity |

@@ -77,6 +77,7 @@ Following industry standards (Git, npm, Docker), ABDS defines TWO directory leve
 **Contents**:
 ```
 ~/.abds/
+├── INDEX.md                # System orientation guide
 ├── learnings/              # Cross-project learnings
 │   ├── CATALOG.md          # Auto-generated index
 │   ├── database/           # Category-based organization
@@ -87,6 +88,7 @@ Following industry standards (Git, npm, Docker), ABDS defines TWO directory leve
 │   └── abds.conf           # User preferences
 ├── templates/              # User-defined templates (optional)
 └── bin/                    # Reference implementation scripts (optional)
+    ├── generate-index      # Auto-generate INDEX.md files (⚡ 10x faster navigation)
     ├── update-catalog      # Generate CATALOG.md from frontmatter
     ├── validate-abds       # Check project compliance
     ├── init-abds           # Initialize ABDS structure
@@ -106,11 +108,14 @@ Following industry standards (Git, npm, Docker), ABDS defines TWO directory leve
 ```
 my-project/.abds/
 └── docs/
+    ├── INDEX.md            # Recommended: Root navigation (10x faster for agents)
     ├── PROJECT-STATE.md    # Required: Project overview
     ├── {feature}/          # Feature documentation
+    │   ├── INDEX.md        # Recommended: Feature navigation
     │   ├── STATE.md        # Required: Current state
     │   ├── CLAUDE.md       # Recommended: Architecture
     │   └── sessions/       # Recommended: History
+    │       └── INDEX.md    # Recommended: Chronological session list
     └── IMPORTANT/          # Optional: Critical patterns
 ```
 

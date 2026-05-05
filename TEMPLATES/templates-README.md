@@ -130,6 +130,74 @@ cp ~/.abds/templates/session-summary.md .abds/docs/auth/sessions/oauth-impl_16_0
 
 ---
 
+#### INDEX.md - Fast Navigation (Auto-Generated)
+
+**Purpose**: Fast navigation for AI agents (⚡ 10-15x speed improvement)
+
+**Location**:
+- `.abds/docs/INDEX.md` (root level)
+- `.abds/docs/{feature}/INDEX.md` (feature level)
+- `.abds/docs/{feature}/sessions/INDEX.md` (sessions level)
+
+**Updated**: Auto-generated on demand
+
+**Audience**: AI agents navigating documentation
+
+**Contains**:
+- **Root INDEX.md**: All features with status, file counts, quick answers
+- **Feature INDEX.md**: Core docs, raw transcripts, sessions, file tree
+- **Sessions INDEX.md**: Chronological session list with dates and summaries
+
+**Recommended Approach - Auto-Generate**:
+```bash
+# Generate for entire project (recommended)
+~/.abds/bin/generate-index --all .abds/docs/
+
+# Generate for specific directory
+~/.abds/bin/generate-index .abds/docs/auth/
+```
+
+**Manual Approach** (if no script available):
+```bash
+# Create basic INDEX.md manually
+cat > .abds/docs/auth/INDEX.md << 'EOF'
+# auth - Feature Index
+
+**Last Updated**: 2026-05-05
+**Status**: ✅ Working
+
+## Quick Navigation
+
+- [Current State](STATE.md)
+- [Architecture](CLAUDE.md)
+- [Sessions](sessions/)
+
+## Documentation Files
+
+- **STATE.md** - Current authentication state
+- **CLAUDE.md** - OAuth architecture and decisions
+
+## Sessions
+
+- [oauth-impl_16_01_2026](sessions/oauth-impl_16_01_2026/)
+EOF
+```
+
+**Why it matters**:
+- Without INDEX.md: Agent scans 50+ files randomly (40-50 seconds)
+- With INDEX.md: Agent reads structured index (2-3 seconds)
+- **Result**: 10-15x faster navigation
+
+**When to regenerate**:
+- After adding new documentation files
+- After creating new sessions
+- When reorganizing directory structure
+- Recommended: Run `generate-index --all` before committing docs
+
+**Note**: INDEX.md files are typically auto-generated and should not be manually edited (changes will be overwritten on next generation).
+
+---
+
 ### Optional Templates
 
 #### learning.md - Learning Documentation

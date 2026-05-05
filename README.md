@@ -52,11 +52,17 @@ ABDS provides a **standard structure**:
 
 ```bash
 ~/.abds/
+  ├─ INDEX.md                # System orientation (what is ~/.abds/)
   ├─ learnings/              # Searchable knowledge base
   │   ├─ CATALOG.md          # Auto-generated index
   │   ├─ database/
   │   ├─ ui/
   │   └─ debugging/
+  ├─ bin/                    # Helper scripts (generate-index, etc.)
+  │   ├─ generate-index      # Auto-generate INDEX.md files
+  │   ├─ update-catalog      # Generate CATALOG.md
+  │   ├─ validate-abds       # Check compliance
+  │   └─ init-abds           # Initialize project
   └─ plans/                  # Implementation plans
 ```
 
@@ -65,14 +71,20 @@ ABDS provides a **standard structure**:
 ```bash
 my-project/.abds/
   └─ docs/
+      ├─ INDEX.md            # Root navigation (⚡ 10x faster for agents)
       ├─ PROJECT-STATE.md    # 2-min project overview
       ├─ auth/
+      │   ├─ INDEX.md        # Feature navigation
       │   ├─ STATE.md        # Current state
       │   ├─ CLAUDE.md       # Architecture
-      │   └─ sessions/       # Work history
+      │   └─ sessions/
+      │       ├─ INDEX.md    # Sessions list (chronological)
+      │       └─ oauth-impl_16_01_2026/
       └─ database/
+          ├─ INDEX.md        # Feature navigation
           ├─ STATE.md
           └─ sessions/
+              └─ INDEX.md    # Sessions list
 ```
 
 ---

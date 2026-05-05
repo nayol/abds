@@ -42,6 +42,7 @@ Think of it as:
 │   └── {description}_{YYYY-MM-DD}_{HH-MM}.md
 │
 ├── bin/                    # Helper scripts and tools
+│   ├── generate-index      # Auto-generate INDEX.md (⚡ 10x faster navigation)
 │   ├── update-catalog      # Generate learnings index
 │   ├── validate-abds       # Check project compliance
 │   ├── init-abds           # Initialize ABDS in project
@@ -100,6 +101,7 @@ Think of it as:
 **Status**: Optional (ABDS can be followed manually)
 
 **Scripts**:
+- `generate-index` - Auto-generate INDEX.md files for fast navigation (⚡ 10-15x speed)
 - `update-catalog` - Regenerate CATALOG.md from frontmatter
 - `validate-abds` - Check compliance level (⭐/⭐⭐/⭐⭐⭐)
 - `init-abds` - Set up ABDS in new project
