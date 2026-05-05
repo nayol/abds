@@ -16,7 +16,7 @@ This directory contains optional helper scripts for working with ABDS.
 
 #### generate-index
 
-**Purpose**: Auto-generate INDEX.md files for fast agent navigation (⚡ 10-15x speed improvement)
+**Purpose**: Auto-generate INDEX.md files for fast agent navigation ( 10-15x speed improvement)
 
 **Usage**:
 ```bash
@@ -38,7 +38,7 @@ This directory contains optional helper scripts for working with ABDS.
 3. Generates structured INDEX.md with:
    - Quick navigation links
    - File organization overview
-   - Status indicators (✅/⚠️/🔄)
+   - Status indicators (//)
    - Chronological ordering (for sessions)
 
 **Why it matters**: Without INDEX.md, agents take 40-50 seconds to scan 50+ files randomly. With INDEX.md, agents read structured index in 2-3 seconds.
@@ -281,11 +281,11 @@ Target: ~/.abds/
 ```bash
 $ ~/.abds/bin/search-learnings "RLS security"
 
-🔍 Searching learnings for: "RLS security"
+ Searching learnings for: "RLS security"
 
 Found 3 matches:
 
-📄 database/rls-schema-qualification.md
+ database/rls-schema-qualification.md
    Keywords: rls, security, postgres
    TL;DR: Always qualify RPC calls with schema to prevent security issues
 
@@ -293,14 +293,14 @@ Found 3 matches:
    > RLS policies must be properly qualified with schema names to ensure
    > security boundaries are correctly enforced...
 
-📄 database/rls-testing-patterns.md
+ database/rls-testing-patterns.md
    Keywords: rls, testing, security
    TL;DR: Test RLS policies with different user contexts
 
    Context:
    > Testing RLS requires switching between different user security contexts...
 
-📄 security/bearer-token-storage.md
+ security/bearer-token-storage.md
    Keywords: auth, security, tokens
    TL;DR: Store tokens in httpOnly cookies, not localStorage
 ```
@@ -378,18 +378,18 @@ $ ~/.abds/bin/find-files-to-rename
 Finding files to rename...
 
 Generic names found:
-  ⚠️  docs/notes.md
+    docs/notes.md
       Suggestion: Rename to describe content (e.g., 'auth-implementation-notes.md')
 
-  ⚠️  docs/temp.md
+    docs/temp.md
       Suggestion: Rename or delete if no longer needed
 
 Sessions needing better names:
-  ⚠️  docs/api/sessions/work_05_05_2026/
+    docs/api/sessions/work_05_05_2026/
       Suggestion: Rename to describe what was done (e.g., 'endpoint-refactoring_05_05_2026')
 
 Unnamed session files:
-  ⚠️  docs/auth/sessions/oauth-impl_16_01_2026/summary.md
+    docs/auth/sessions/oauth-impl_16_01_2026/summary.md
       Suggestion: Rename to match folder (e.g., 'oauth-impl.md')
 
 Total files to review: 4
@@ -444,10 +444,10 @@ apt-get install abds-tools
 - jq (for JSON processing, future features)
 
 **Compatibility**:
-- ✅ Linux
-- ✅ macOS
-- ✅ BSD
-- ✅ WSL (Windows Subsystem for Linux)
+-  Linux
+-  macOS
+-  BSD
+-  WSL (Windows Subsystem for Linux)
 
 ---
 

@@ -7,14 +7,14 @@
 
 ---
 
-## 🎯 What is ABDS?
+## What is ABDS?
 
 ABDS is a **system-level open specification** (like FHS, XDG, POSIX) that defines:
 
-- 📁 **Where** documentation lives (standard directory layout)
-- 📚 **How** to organize knowledge (4-layer documentation system)
-- 📝 **What** formats to use (markdown, YAML frontmatter)
-- 🔧 **What** tools are available (optional reference implementation scripts)
+- **Where** documentation lives (standard directory layout)
+- **How** to organize knowledge (4-layer documentation system)
+- **What** formats to use (markdown, YAML frontmatter)
+- **What** tools are available (optional reference implementation scripts)
 
 **Like FHS defines `/usr/bin` for programs, ABDS defines `~/.abds/` for knowledge.**
 
@@ -32,66 +32,66 @@ ABDS is a **system-level open specification** (like FHS, XDG, POSIX) that define
 
 ---
 
-## ❓ The Problem
+## The Problem
 
 Working with AI agents (Cursor, Aider, Windsurf, etc.) creates chaos:
 
-- 📂 **Scattered documentation**: README, CLAUDE.md, random docs/ files
-- 🤔 **Lost context**: "What did we do last week? Why that decision?"
-- 🔄 **Repeated work**: Solving the same problems over and over
-- 🎨 **Inconsistent formats**: Every project documents differently
-- 🔍 **Poor navigation**: Hard for both humans and LLMs to find information
+- **Scattered documentation**: README, CLAUDE.md, random docs/ files
+- **Lost context**: "What did we do last week? Why that decision?"
+- **Repeated work**: Solving the same problems over and over
+- **Inconsistent formats**: Every project documents differently
+- **Poor navigation**: Hard for both humans and LLMs to find information
 
 ---
 
-## ✅ The Solution
+## The Solution
 
 ABDS provides a **standard structure**:
 
 ### Global (cross-project knowledge)
 
-```bash
+```
 ~/.abds/
-  ├─ INDEX.md                # System orientation (what is ~/.abds/)
-  ├─ learnings/              # Searchable knowledge base
-  │   ├─ CATALOG.md          # Auto-generated index
-  │   ├─ database/
-  │   ├─ ui/
-  │   └─ debugging/
-  ├─ bin/                    # Helper scripts (generate-index, etc.)
-  │   ├─ generate-index      # Auto-generate INDEX.md files
-  │   ├─ update-catalog      # Generate CATALOG.md
-  │   ├─ validate-abds       # Check compliance
-  │   └─ init-abds           # Initialize project
-  └─ plans/                  # Implementation plans
+  INDEX.md                   # System orientation
+  learnings/                 # Cross-project knowledge
+    CATALOG.md               # Auto-generated index
+    database/
+    ui/
+    debugging/
+  bin/                       # Helper scripts
+    generate-index           # Auto-generate INDEX.md files
+    update-catalog           # Generate CATALOG.md
+    validate-abds            # Check compliance
+    init-abds                # Initialize project
+  plans/                     # Implementation plans
 ```
 
 ### Local (project-specific)
 
-```bash
+```
 my-project/.abds/
-  └─ docs/
-      ├─ INDEX.md            # Root navigation (⚡ 10x faster for agents)
-      ├─ PROJECT-STATE.md    # 2-min project overview
-      ├─ auth/
-      │   ├─ INDEX.md        # Feature navigation
-      │   ├─ STATE.md        # Current state
-      │   ├─ CLAUDE.md       # Architecture
-      │   └─ sessions/
-      │       ├─ INDEX.md    # Sessions list (chronological)
-      │       └─ oauth-impl_16_01_2026/
-      └─ database/
-          ├─ INDEX.md        # Feature navigation
-          ├─ STATE.md
-          └─ sessions/
-              └─ INDEX.md    # Sessions list
+  docs/
+    INDEX.md                 # Root navigation (10x faster)
+    PROJECT-STATE.md         # 2-min project overview
+    auth/
+      INDEX.md               # Feature navigation
+      STATE.md               # Current state
+      CLAUDE.md              # Architecture
+      sessions/
+        INDEX.md             # Sessions list
+        oauth-impl_16_01_2026/
+    database/
+      INDEX.md               # Feature navigation
+      STATE.md
+      sessions/
+        INDEX.md             # Sessions list
 ```
 
 ---
 
 ## Why ABDS?
 
-### ✅ Universal
+### Universal
 Works with **any** AI agent system:
 - Cursor
 - Aider
@@ -100,30 +100,30 @@ Works with **any** AI agent system:
 - Custom tools
 - Any LLM-based coding assistant
 
-### ✅ Predictable
+### Predictable
 Always know where to find:
 - Current project state → `.abds/docs/PROJECT-STATE.md`
 - Feature architecture → `.abds/docs/{feature}/CLAUDE.md`
 - Work history → `.abds/docs/{feature}/sessions/`
 - Cross-project learnings → `~/.abds/learnings/`
 
-### ✅ Separates Concerns
+### Separates Concerns
 - **Current state** ≠ **Architecture** ≠ **History** ≠ **Learnings**
 - Each layer has different update frequency and audience
 
-### ✅ Git-Friendly
+### Git-Friendly
 - Plain text (markdown)
 - Clear diffs
 - Immutable history (sessions never change)
 
-### ✅ LLM-Optimized
+### LLM-Optimized
 - Structured for agent parsing
 - Standard locations = predictable navigation
 - Markdown = native format for LLMs
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Create Global Directory
 
@@ -149,10 +149,10 @@ cat > .abds/docs/PROJECT-STATE.md << 'EOF'
 ## Current Focus
 - What you're working on right now
 
-## What Works ✅
+## What Works
 - Features that are deployed and working
 
-## Active Problems ⚠️
+## Active Problems
 - Issues being investigated
 
 ## Recent Changes (Last 7 Days)
@@ -202,20 +202,20 @@ RPC calls without schema qualification can fail or expose security issues.
 
 ## Solution
 ```typescript
-// ✅ Correct
+// Correct
 await client.schema('public').rpc('my_function', {...})
 
-// ❌ Wrong
+// Wrong
 await client.rpc('my_function', {...})
 ```
 EOF
 ```
 
-**✨ You're now ABDS-compliant! ⭐**
+**You're now ABDS-compliant!**
 
 ---
 
-## 📊 The Four Documentation Layers
+## The Four Documentation Layers
 
 ABDS organizes documentation into 4 layers, each serving a different time scale:
 
@@ -233,18 +233,18 @@ ABDS organizes documentation into 4 layers, each serving a different time scale:
 
 ---
 
-## 🏆 Compliance Levels
+## Compliance Levels
 
-### ⭐ Level 1: Minimal
+### Level 1: Minimal
 - Global: `~/.abds/learnings/` exists
 - Local: `PROJECT-STATE.md` + at least one feature `STATE.md`
 
-### ⭐⭐ Level 2: Standard
+### Level 2: Standard
 - Level 1 + `CLAUDE.md` for major features
 - Session folders for significant work
 - Standard naming conventions
 
-### ⭐⭐⭐ Level 3: Full
+### Level 3: Full
 - Level 2 + learnings system with `CATALOG.md`
 - `docs/IMPORTANT/` for critical patterns
 - Plans directory
@@ -252,9 +252,9 @@ ABDS organizes documentation into 4 layers, each serving a different time scale:
 
 ---
 
-## 📖 Full Specification
+## Full Specification
 
-👉 **[Read ABDS-1.0.md](ABDS-1.0.md)** for complete specification including:
+**[Read ABDS-1.0.md](ABDS-1.0.md)** for complete specification including:
 
 - Directory structure requirements
 - File naming conventions
@@ -265,67 +265,72 @@ ABDS organizes documentation into 4 layers, each serving a different time scale:
 
 ---
 
-## 💡 Examples
+## Examples
 
-### Minimal Project (Level 1 ⭐)
-
-```
-~/.abds/learnings/CATALOG.md
-
-my-project/.abds/
-└── docs/
-    ├── PROJECT-STATE.md
-    └── api/
-        └── STATE.md
-```
-
-### Standard Project (Level 2 ⭐⭐)
+### Minimal Project (Level 1)
 
 ```
 ~/.abds/
-├── learnings/{category}/
-└── plans/
+  learnings/
+    CATALOG.md
 
 my-project/.abds/
-└── docs/
-    ├── PROJECT-STATE.md
-    ├── auth/
-    │   ├── STATE.md
-    │   ├── CLAUDE.md
-    │   └── sessions/oauth-impl_16_01_2026/
-    └── database/
-        ├── STATE.md
-        └── CLAUDE.md
+  docs/
+    PROJECT-STATE.md
+    api/
+      STATE.md
 ```
 
-### Full Project (Level 3 ⭐⭐⭐)
+### Standard Project (Level 2)
 
 ```
 ~/.abds/
-├── learnings/
-│   ├── CATALOG.md
-│   ├── database/
-│   ├── ui/
-│   └── sessions/
-├── plans/
-└── config/abds.conf
+  learnings/
+    {category}/
+  plans/
 
 my-project/.abds/
-├── docs/
-│   ├── PROJECT-STATE.md
-│   ├── IMPORTANT/
-│   │   ├── GUIDES/
-│   │   ├── MISTAKES/
-│   │   └── LEARNINGS/
-│   ├── auth/
-│   │   ├── STATE.md
-│   │   ├── CLAUDE.md
-│   │   └── sessions/
-│   └── database/
-│       ├── STATE.md
-│       ├── CLAUDE.md
-│       └── sessions/
-└── plans/
+  docs/
+    PROJECT-STATE.md
+    auth/
+      STATE.md
+      CLAUDE.md
+      sessions/
+        oauth-impl_16_01_2026/
+    database/
+      STATE.md
+      CLAUDE.md
+```
+
+### Full Project (Level 3)
+
+```
+~/.abds/
+  learnings/
+    CATALOG.md
+    database/
+    ui/
+    sessions/
+  plans/
+  config/
+    abds.conf
+
+my-project/.abds/
+  docs/
+    PROJECT-STATE.md
+    IMPORTANT/
+      GUIDES/
+      MISTAKES/
+      LEARNINGS/
+    auth/
+      STATE.md
+      CLAUDE.md
+      sessions/
+    database/
+      STATE.md
+      CLAUDE.md
+      sessions/
+  plans/
 ```
 
 ---
@@ -444,14 +449,14 @@ You can follow ABDS **manually** - no tools required. Scripts are optional helpe
 
 ## Who Should Use ABDS?
 
-### ✅ Perfect For:
+### Perfect For:
 - Developers working with AI coding assistants
 - Teams sharing knowledge across projects
 - Long-running projects needing organized docs
 - Anyone solving the same problems repeatedly
 - Projects with architectural decisions to document
 
-### ⚠️ Maybe Not For:
+### Maybe Not For:
 - Throwaway prototypes (< 1 week lifespan)
 - Projects with zero documentation needs
 - Solo scripts with no complexity
@@ -462,10 +467,10 @@ You can follow ABDS **manually** - no tools required. Scripts are optional helpe
 
 ABDS is an **open specification**. Contributions welcome:
 
-- 🐛 **Issues**: Suggest improvements, report ambiguities
-- 📝 **Pull Requests**: Clarifications, examples, templates
-- 🎯 **Implementations**: Share ABDS-compliant projects
-- 💬 **Discussions**: Propose extensions, share use cases
+- **Issues**: Suggest improvements, report ambiguities
+- **Pull Requests**: Clarifications, examples, templates
+- **Implementations**: Share ABDS-compliant projects
+- **Discussions**: Propose extensions, share use cases
 
 **Repository**: https://github.com/abds-spec/abds
 

@@ -30,16 +30,16 @@
 5. **OS-like**: Operating system for knowledge, not just docs
 
 **It is NOT**:
-- ❌ A tool or software
-- ❌ A framework or library
-- ❌ A product or service
-- ❌ Project-specific templates
+- A tool or software
+- A framework or library
+- A product or service
+- Project-specific templates
 
 **It IS**:
-- ✅ A system-level specification (like POSIX, XDG-BDS, FHS)
-- ✅ Infrastructure standard for knowledge organization
-- ✅ Universal conventions that work with any tool
-- ✅ Templates and reference implementation scripts
+- A system-level specification (like POSIX, XDG-BDS, FHS)
+- Infrastructure standard for knowledge organization
+- Universal conventions that work with any tool
+- Templates and reference implementation scripts
 
 ---
 
@@ -52,15 +52,15 @@ You're a developer working with AI coding assistants. After 3 months:
 ```
 Your project looks like this:
 project/
-├── README.md (out of date)
-├── CLAUDE.md (mixed architecture + current state)
-├── docs/
-│   ├── old-notes.md
-│   ├── meeting-notes-march.md
-│   ├── database-stuff.md
-│   └── TODO.md
-├── random-learnings.txt
-└── src/
+  README.md                  (out of date)
+  CLAUDE.md                  (mixed architecture + current state)
+  docs/
+    old-notes.md
+    meeting-notes-march.md
+    database-stuff.md
+    TODO.md
+  random-learnings.txt
+  src/
 ```
 
 **Problems**:
@@ -68,7 +68,7 @@ project/
 2. 📂 "Where did I document that database fix?"
 3. 🔄 "Didn't we solve this caching problem before?"
 4. 🗂️ "Which docs are current? Which are outdated?"
-5. 🔍 AI agent asks: "Where's the architecture documentation?"
+5. AI agent asks: "Where's the architecture documentation?"
 
 **Result**: Chaos. Lost context. Repeated work. Frustrated developers.
 
@@ -91,36 +91,36 @@ ABDS provides a **standard structure** that solves this:
 ```
 Global (your personal knowledge):
 ~/.abds/
-├── INDEX.md            # "What is ~/.abds/?"
-├── learnings/          # "I solved RLS issue in 3 projects"
-│   └── database/
-│       └── rls-patterns.md
-├── bin/                # Helper scripts
-│   └── generate-index  # Auto-generate INDEX.md (10x faster navigation)
-└── plans/              # "My implementation plan template"
+  INDEX.md                   # "What is ~/.abds/?"
+  learnings/                 # "I solved RLS issue in 3 projects"
+    database/
+      rls-patterns.md
+  bin/                       # Helper scripts
+    generate-index           # Auto-generate INDEX.md (10x faster navigation)
+  plans/                     # "My implementation plan template"
 
 Local (this project):
 my-project/.abds/
-└── docs/
-    ├── INDEX.md            # Root navigation (⚡ 10x faster for agents)
-    ├── PROJECT-STATE.md    # "What's happening NOW"
-    ├── auth/
-    │   ├── INDEX.md        # Feature navigation
-    │   ├── STATE.md        # "Auth current state"
-    │   ├── CLAUDE.md       # "Why we chose OAuth"
-    │   └── sessions/       # "What we did March 15"
-    │       └── INDEX.md    # Sessions list (chronological)
-    └── database/
-        ├── INDEX.md        # Feature navigation
-        └── STATE.md
+  docs/
+    INDEX.md                 # Root navigation (10x faster for agents)
+    PROJECT-STATE.md         # "What's happening NOW"
+    auth/
+      INDEX.md               # Feature navigation
+      STATE.md               # "Auth current state"
+      CLAUDE.md              # "Why we chose OAuth"
+      sessions/              # "What we did March 15"
+        INDEX.md             # Sessions list (chronological)
+    database/
+      INDEX.md               # Feature navigation
+      STATE.md
 ```
 
 **Now**:
-- ✅ Always know where to look
-- ✅ Current state separate from history
-- ✅ Learnings captured systematically
-- ✅ AI agents navigate predictably
-- ✅ Knowledge compounds instead of getting lost
+- Always know where to look
+- Current state separate from history
+- Learnings captured systematically
+- AI agents navigate predictably
+- Knowledge compounds instead of getting lost
 
 ---
 

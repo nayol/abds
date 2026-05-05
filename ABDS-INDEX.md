@@ -27,40 +27,40 @@ Think of it as:
 
 ```
 ~/.abds/
-├── learnings/              # Cross-project knowledge and patterns
-│   ├── CATALOG.md          # Searchable index (auto-generated)
-│   ├── database/           # Category-based organization
-│   │   ├── rls-patterns.md
-│   │   └── migration-best-practices.md
-│   ├── ui/
-│   │   └── scroll-preservation.md
-│   ├── debugging/
-│   ├── testing/
-│   └── sessions/           # Session-based learnings
-│
-├── plans/                  # Implementation plans
-│   └── {description}_{YYYY-MM-DD}_{HH-MM}.md
-│
-├── bin/                    # Helper scripts and tools
-│   ├── generate-index      # Auto-generate INDEX.md (⚡ 10x faster navigation)
-│   ├── update-catalog      # Generate learnings index
-│   ├── validate-abds       # Check project compliance
-│   ├── init-abds           # Initialize ABDS in project
-│   ├── search-learnings    # Search across all learnings
-│   └── create-session      # Create new session folder
-│
-├── config/                 # Configuration files
-│   └── abds.conf           # User preferences
-│
-├── templates/              # Document templates
-│   ├── PROJECT-STATE.md    # Project overview template
-│   ├── STATE.md            # Feature state template
-│   ├── CLAUDE.md           # Architecture template
-│   ├── session-summary.md  # Session documentation template
-│   ├── learning.md         # Learning documentation template
-│   └── README.md           # Project docs index template
-│
-└── INDEX.md                # This file (orientation guide)
+  learnings/                 # Cross-project knowledge and patterns
+    CATALOG.md               # Searchable index (auto-generated)
+    database/                # Category-based organization
+      rls-patterns.md
+      migration-best-practices.md
+    ui/
+      scroll-preservation.md
+    debugging/
+    testing/
+    sessions/                # Session-based learnings
+
+  plans/                     # Implementation plans
+    {description}_{YYYY-MM-DD}_{HH-MM}.md
+
+  bin/                       # Helper scripts and tools
+    generate-index           # Auto-generate INDEX.md (10x faster navigation)
+    update-catalog           # Generate learnings index
+    validate-abds            # Check project compliance
+    init-abds                # Initialize ABDS in project
+    search-learnings         # Search across all learnings
+    create-session           # Create new session folder
+
+  config/                    # Configuration files
+    abds.conf                # User preferences
+
+  templates/                 # Document templates
+    PROJECT-STATE.md         # Project overview template
+    STATE.md                 # Feature state template
+    CLAUDE.md                # Architecture template
+    session-summary.md       # Session documentation template
+    learning.md              # Learning documentation template
+    README.md                # Project docs index template
+
+  INDEX.md                   # This file (orientation guide)
 ```
 
 ---
@@ -101,9 +101,9 @@ Think of it as:
 **Status**: Optional (ABDS can be followed manually)
 
 **Scripts**:
-- `generate-index` - Auto-generate INDEX.md files for fast navigation (⚡ 10-15x speed)
+- `generate-index` - Auto-generate INDEX.md files for fast navigation (10-15x speed)
 - `update-catalog` - Regenerate CATALOG.md from frontmatter
-- `validate-abds` - Check compliance level (⭐/⭐⭐/⭐⭐⭐)
+- `validate-abds` - Check compliance level (L1/L2/L3)
 - `init-abds` - Set up ABDS in new project
 - `search-learnings` - Full-text search across learnings
 - `create-session` - Create properly named session folder

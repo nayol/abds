@@ -60,7 +60,7 @@ When contributing, keep these principles in mind:
 
 ## What Makes a Good Contribution
 
-### ✅ Good Contributions
+###  Good Contributions
 
 - Clarifies ambiguous requirements
 - Adds missing examples
@@ -68,7 +68,7 @@ When contributing, keep these principles in mind:
 - Improves readability
 - Shares real-world use cases
 
-### ❌ Avoid
+###  Avoid
 
 - Adding complexity without clear benefit
 - Tool-specific requirements
@@ -103,10 +103,10 @@ If you're building tools, create a separate repo and link it here!
 ### Examples
 
 ```markdown
-# ✅ Good
+#  Good
 Projects MUST have a PROJECT-STATE.md file.
 
-# ❌ Vague
+#  Vague
 Projects should probably have some kind of state file.
 ```
 

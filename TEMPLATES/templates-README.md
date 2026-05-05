@@ -132,7 +132,7 @@ cp ~/.abds/templates/session-summary.md .abds/docs/auth/sessions/oauth-impl_16_0
 
 #### INDEX.md - Fast Navigation (Auto-Generated)
 
-**Purpose**: Fast navigation for AI agents (⚡ 10-15x speed improvement)
+**Purpose**: Fast navigation for AI agents ( 10-15x speed improvement)
 
 **Location**:
 - `.abds/docs/INDEX.md` (root level)
@@ -511,13 +511,11 @@ cp -r TEMPLATES/* ~/.abds/templates/
 - Implementing OAuth2 authentication
 - Migration to Supabase RLS
 
-## What Works ✅
-- User registration and login
+## What Works - User registration and login
 - Basic CRUD operations
 - Database migrations
 
-## Active Problems ⚠️
-- OAuth refresh token rotation (investigating)
+## Active Problems - OAuth refresh token rotation (investigating)
 - RLS policies for admin users (blocked on Supabase support)
 
 ## Recent Changes (Last 7 Days)

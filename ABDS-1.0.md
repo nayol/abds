@@ -77,25 +77,25 @@ Following industry standards (Git, npm, Docker), ABDS defines TWO directory leve
 **Contents**:
 ```
 ~/.abds/
-├── INDEX.md                # System orientation guide
-├── learnings/              # Cross-project learnings
-│   ├── CATALOG.md          # Auto-generated index
-│   ├── database/           # Category-based organization
-│   ├── ui/
-│   └── ...
-├── plans/                  # User-level implementation plans
-├── config/                 # Global configuration
-│   └── abds.conf           # User preferences
-├── templates/              # User-defined templates (optional)
-└── bin/                    # Reference implementation scripts (optional)
-    ├── generate-index      # Auto-generate INDEX.md files (⚡ 10x faster navigation)
-    ├── update-catalog      # Generate CATALOG.md from frontmatter
-    ├── validate-abds       # Check project compliance
-    ├── init-abds           # Initialize ABDS structure
-    ├── migrate-abds        # Migrate from legacy structure
-    ├── search-learnings    # Search across all learnings
-    ├── create-session      # Create new session folder
-    └── find-files-to-rename # Find files needing better names
+  INDEX.md                   # System orientation guide
+  learnings/                 # Cross-project learnings
+    CATALOG.md               # Auto-generated index
+    database/                # Category-based organization
+    ui/
+    ...
+  plans/                     # User-level implementation plans
+  config/                    # Global configuration
+    abds.conf                # User preferences
+  templates/                 # User-defined templates (optional)
+  bin/                       # Reference implementation scripts (optional)
+    generate-index           # Auto-generate INDEX.md files (10x faster navigation)
+    update-catalog           # Generate CATALOG.md from frontmatter
+    validate-abds            # Check project compliance
+    init-abds                # Initialize ABDS structure
+    migrate-abds             # Migrate from legacy structure
+    search-learnings         # Search across all learnings
+    create-session           # Create new session folder
+    find-files-to-rename     # Find files needing better names
 ```
 
 #### Local (Project-level)
@@ -107,16 +107,16 @@ Following industry standards (Git, npm, Docker), ABDS defines TWO directory leve
 **Contents**:
 ```
 my-project/.abds/
-└── docs/
-    ├── INDEX.md            # Recommended: Root navigation (10x faster for agents)
-    ├── PROJECT-STATE.md    # Required: Project overview
-    ├── {feature}/          # Feature documentation
-    │   ├── INDEX.md        # Recommended: Feature navigation
-    │   ├── STATE.md        # Required: Current state
-    │   ├── CLAUDE.md       # Recommended: Architecture
-    │   └── sessions/       # Recommended: History
-    │       └── INDEX.md    # Recommended: Chronological session list
-    └── IMPORTANT/          # Optional: Critical patterns
+  docs/
+    INDEX.md                 # Recommended: Root navigation (10x faster for agents)
+    PROJECT-STATE.md         # Required: Project overview
+    {feature}/               # Feature documentation
+      INDEX.md               # Recommended: Feature navigation
+      STATE.md               # Required: Current state
+      CLAUDE.md              # Recommended: Architecture
+      sessions/              # Recommended: History
+        INDEX.md             # Recommended: Chronological session list
+    IMPORTANT/               # Optional: Critical patterns
 ```
 
 **Compliance**:
@@ -431,8 +431,7 @@ ABDS-compliant projects SHOULD use standard templates for consistency.
 
 ## 7. Compliance Levels
 
-### Level 1: Minimal Compliance ⭐
-
+### Level 1: Minimal Compliance 
 REQUIRED for ABDS-1.0 compliance:
 
 - [ ] Base directory exists (`.agent/`, `.claude/`, `.cursor/`, or `.ai/`)
@@ -441,8 +440,7 @@ REQUIRED for ABDS-1.0 compliance:
 
 **Use case**: Small projects, getting started
 
-### Level 2: Standard Compliance ⭐⭐
-
+### Level 2: Standard Compliance ⭐
 REQUIRED + RECOMMENDED:
 
 - [ ] All Level 1 requirements
@@ -452,8 +450,7 @@ REQUIRED + RECOMMENDED:
 
 **Use case**: Professional projects, team collaboration
 
-### Level 3: Full Compliance ⭐⭐⭐
-
+### Level 3: Full Compliance ⭐⭐
 ALL features:
 
 - [ ] All Level 2 requirements
