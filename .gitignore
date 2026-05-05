@@ -1,6 +1,9 @@
 # Internal working documentation (not part of spec)
 docs/
 
+# Claude Code internal files
+.claude/
+
 # OS-specific files
 .DS_Store
 .DS_Store?
