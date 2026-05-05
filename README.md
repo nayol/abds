@@ -1,6 +1,6 @@
 # ABDS - Agent Base Directory Specification
 
-> **A universal standard for organizing documentation and knowledge in AI agent development environments**
+> **A system-level standard for organizing documentation and knowledge in AI agent development**
 
 [![License: CC0](https://img.shields.io/badge/License-CC0-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0--draft-orange.svg)](ABDS-1.0.md)
@@ -9,13 +9,26 @@
 
 ## 🎯 What is ABDS?
 
-ABDS is an **open specification** that defines:
+ABDS is a **system-level open specification** (like FHS, XDG, POSIX) that defines:
 
 - 📁 **Where** documentation lives (standard directory layout)
 - 📚 **How** to organize knowledge (4-layer documentation system)
 - 📝 **What** formats to use (markdown, YAML frontmatter)
+- 🔧 **What** tools are available (optional reference implementation scripts)
 
-**Like XDG for `~/.config/`, but for AI agent workspaces.**
+**Like FHS defines `/usr/bin` for programs, ABDS defines `~/.abds/` for knowledge.**
+
+### What "System-Level" Means
+
+| Standard | Scope | ABDS Equivalent |
+|----------|-------|-----------------|
+| **FHS** (Filesystem Hierarchy) | Defines `/usr`, `/etc`, `/var` | Defines `~/.abds/`, `.abds/docs/` |
+| **XDG** (Base Directory) | Defines `~/.config`, `~/.cache` | Defines `~/.abds/learnings/`, `~/.abds/bin/` |
+| **POSIX** (OS Interface) | Defines system calls | Defines doc structure, file formats |
+| **ABDS** | Defines knowledge system | **System-level knowledge infrastructure** |
+
+**NOT like**: `package.json` (project-specific), `.gitignore` (tool-specific)
+**IS like**: `/usr/bin` (universal), `~/.config` (cross-application)
 
 ---
 
@@ -346,18 +359,74 @@ mkdir -p .abds/docs
 
 ## Tools & Helpers
 
-ABDS is a **specification**, not a toolkit.
+ABDS includes optional reference implementation scripts in `~/.abds/bin/` (following Unix convention: `~/.local/bin`).
 
-However, reference implementations may provide optional helpers:
+### Included Scripts
 
-- `validate-abds` - Check project compliance
-- `update-catalog` - Generate `CATALOG.md` from frontmatter
-- `init-abds` - Initialize ABDS structure
-- `migrate-abds` - Migrate from legacy `.claude/` structure
+#### Core Tools
+
+**update-catalog** - Generate CATALOG.md from frontmatter
+```bash
+~/.abds/bin/update-catalog
+```
+Scans all learnings, extracts YAML frontmatter, generates searchable catalog.
+Idempotent - safe to run multiple times.
+
+**validate-abds** - Check project compliance
+```bash
+~/.abds/bin/validate-abds [project-path]
+```
+Validates ABDS compliance level (⭐/⭐⭐/⭐⭐⭐).
+Reports missing components and suggests improvements.
+
+**init-abds** - Initialize ABDS structure
+```bash
+~/.abds/bin/init-abds [project-path]
+```
+Creates ABDS directory structure with templates.
+Interactive - prompts for feature name.
+
+**migrate-abds** - Migrate from legacy structure
+```bash
+~/.abds/bin/migrate-abds --from ~/.claude --to ~/.abds
+```
+Migrates documentation from tool-specific to ABDS structure.
+Creates backup before migration.
+
+#### Documentation Helpers
+
+**search-learnings** - Search across all learnings
+```bash
+~/.abds/bin/search-learnings "database RLS"
+```
+Full-text search with keyword highlighting.
+
+**create-session** - Create new session folder
+```bash
+~/.abds/bin/create-session
+```
+Interactive session creation with proper naming.
+
+**find-files-to-rename** - Find generic filenames
+```bash
+~/.abds/bin/find-files-to-rename
+```
+Identifies files needing better names.
+
+### Installation
+
+```bash
+# Clone ABDS repository
+git clone https://github.com/abds-spec/abds.git
+cp -r abds/bin/ ~/.abds/bin/
+chmod +x ~/.abds/bin/*
+
+# Or download individual scripts from releases
+```
 
 **Philosophy**: Specification is primary. Tools are secondary.
 
-You can follow ABDS **manually** - no tools required.
+You can follow ABDS **manually** - no tools required. Scripts are optional helpers.
 
 ---
 

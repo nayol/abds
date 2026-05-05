@@ -1,0 +1,270 @@
+#!/bin/bash
+#
+# update-catalog - Generate CATALOG.md from learning frontmatter
+#
+# Usage: update-catalog
+#
+# Reads all .md files in ~/.abds/learnings/{category}/ and generates
+# CATALOG.md with entries sorted by category.
+#
+# Frontmatter format:
+#   ---
+#   keywords: [keyword1, keyword2, ...]
+#   category: database
+#   description: "Problem description"
+#   tldr: "Solution summary"
+#   confidence: verified | tested | theoretical
+#   projects_applied:
+#     - name: project-name
+#       date: YYYY-MM-DD
+#   ---
+#
+# If frontmatter missing, falls back to extracting from content.
+#
+# Part of ABDS (Agent Base Directory Specification) v1.0
+# https://github.com/abds-spec/abds
+
+set -euo pipefail
+
+# Support ABDS_HOME override (following XDG pattern)
+ABDS_HOME="${ABDS_HOME:-$HOME/.abds}"
+LEARNINGS_DIR="$ABDS_HOME/learnings"
+CATALOG_FILE="$LEARNINGS_DIR/CATALOG.md"
+TEMP_FILE="$LEARNINGS_DIR/.catalog.tmp"
+
+# Check if learnings directory exists
+if [[ ! -d "$LEARNINGS_DIR" ]]; then
+  echo "Error: Learnings directory not found: $LEARNINGS_DIR"
+  echo "Create it with: mkdir -p $LEARNINGS_DIR"
+  exit 1
+fi
+
+# Standard categories (can be extended)
+CATEGORIES=(
+  "security"
+  "database"
+  "auth"
+  "react"
+  "navigation"
+  "ui"
+  "debugging"
+  "testing"
+  "guides"
+  "mistakes"
+  "documentation"
+  "infrastructure"
+  "tools"
+  "seo"
+  "architecture"
+  "typescript"
+)
+
+# Colors for output (respect NO_COLOR)
+if [[ -z "${NO_COLOR:-}" ]]; then
+  GREEN='\033[0;32m'
+  YELLOW='\033[1;33m'
+  NC='\033[0m'
+else
+  GREEN=''
+  YELLOW=''
+  NC=''
+fi
+
+echo "🔍 Generating CATALOG.md..."
+
+# Header
+cat > "$TEMP_FILE" <<'EOF'
+<!-- GENERATED FILE - DO NOT EDIT MANUALLY -->
+<!-- Run: ~/.abds/bin/update-catalog to regenerate -->
+
+# Learnings Catalog
+
+**Purpose**: Cross-project knowledge base. Scan this first before starting work.
+
+**Format**: Each entry shows:
+- File path
+- Keywords (for searching)
+- Problem description
+- TL;DR solution (quick answer)
+
+**How to use**:
+1. Search by keyword (Ctrl+F / Cmd+F)
+2. Read TL;DR for quick solution
+3. Open full file for details
+
+---
+
+EOF
+
+# Automatically discover all categories (not just predefined)
+all_categories=()
+for dir in "$LEARNINGS_DIR"/*/ ; do
+  if [[ -d "$dir" ]]; then
+    category=$(basename "$dir")
+    all_categories+=("$category")
+  fi
+done
+
+# Sort categories alphabetically
+IFS=$'\n' sorted_categories=($(sort <<<"${all_categories[*]}"))
+unset IFS
+
+# Process each category
+total_entries=0
+for category in "${sorted_categories[@]}"; do
+  category_dir="$LEARNINGS_DIR/$category"
+
+  # Check if category has any .md files (excluding CATALOG.md itself)
+  shopt -s nullglob
+  md_files=("$category_dir"/*.md)
+  shopt -u nullglob
+
+  # Filter out CATALOG.md if it exists in subdirectory
+  filtered_files=()
+  for file in "${md_files[@]}"; do
+    filename=$(basename "$file")
+    if [[ "$filename" != "CATALOG.md" && "$filename" != "README.md" ]]; then
+      filtered_files+=("$file")
+    fi
+  done
+
+  if [[ ${#filtered_files[@]} -eq 0 ]]; then
+    continue
+  fi
+
+  # Category header (capitalize first letter)
+  category_name=$(echo "$category" | sed 's/.*/\u&/')
+  echo "## $category_name (${#filtered_files[@]} learnings)" >> "$TEMP_FILE"
+  echo "" >> "$TEMP_FILE"
+
+  # Process each learning file
+  for file in "${filtered_files[@]}"; do
+    filename=$(basename "$file")
+
+    # Extract frontmatter fields
+    keywords=""
+    description=""
+    tldr=""
+    confidence=""
+
+    # Check if file has frontmatter
+    if head -1 "$file" | grep -q "^---$"; then
+      # Extract keywords (remove brackets and quotes)
+      keywords=$(sed -n '/^keywords:/p' "$file" | head -1 | sed 's/^keywords: *\[//; s/\]$//; s/"//g; s/, */ /g' || echo "")
+
+      # Extract description (remove quotes)
+      description=$(sed -n '/^description:/p' "$file" | head -1 | sed 's/^description: *"//; s/"$//' || echo "")
+
+      # Extract tldr (remove quotes)
+      tldr=$(sed -n '/^tldr:/p' "$file" | head -1 | sed 's/^tldr: *"//; s/"$//' || echo "")
+
+      # Extract confidence
+      confidence=$(sed -n '/^confidence:/p' "$file" | head -1 | sed 's/^confidence: *//' || echo "")
+    fi
+
+    # Fallback: Extract from content if frontmatter missing
+    if [[ -z "$description" ]]; then
+      # Try to find first paragraph after title
+      description=$(sed -n '/^# /,/^$/p' "$file" | sed '1d; /^$/d; /^---$/d; /^\*\*/d' | head -1 || echo "")
+    fi
+
+    if [[ -z "$tldr" ]]; then
+      # Try to find TL;DR section
+      tldr=$(sed -n '/^## TL;DR/,/^##/p' "$file" | sed '1d; /^##/d; /^$/d; /^\*\*/d' | head -1 || echo "")
+    fi
+
+    # Skip if we still don't have description
+    if [[ -z "$description" ]]; then
+      echo -e "${YELLOW}⚠️  Skipping $category/$filename (no description)${NC}" >&2
+      continue
+    fi
+
+    # Clean up extracted text (remove markdown formatting)
+    description=$(echo "$description" | sed 's/\*\*//g; s/`//g')
+    tldr=$(echo "$tldr" | sed 's/\*\*//g; s/`//g')
+
+    # Write entry
+    echo "### $filename" >> "$TEMP_FILE"
+    echo "" >> "$TEMP_FILE"
+
+    if [[ -n "$keywords" ]]; then
+      echo "**Keywords**: $keywords" >> "$TEMP_FILE"
+      echo "" >> "$TEMP_FILE"
+    fi
+
+    echo "**Problem**: $description" >> "$TEMP_FILE"
+    echo "" >> "$TEMP_FILE"
+
+    if [[ -n "$tldr" ]]; then
+      echo "**TL;DR**: $tldr" >> "$TEMP_FILE"
+      echo "" >> "$TEMP_FILE"
+    fi
+
+    if [[ -n "$confidence" ]]; then
+      echo "**Confidence**: $confidence" >> "$TEMP_FILE"
+      echo "" >> "$TEMP_FILE"
+    fi
+
+    echo "**File**: [\`$category/$filename\`]($category/$filename)" >> "$TEMP_FILE"
+    echo "" >> "$TEMP_FILE"
+    echo "---" >> "$TEMP_FILE"
+    echo "" >> "$TEMP_FILE"
+
+    ((total_entries++))
+  done
+done
+
+# Footer
+cat >> "$TEMP_FILE" <<EOF
+## How to Use This Catalog
+
+### Quick Search
+1. Press Ctrl+F (Windows/Linux) or Cmd+F (Mac)
+2. Search by keyword (e.g., "RLS", "authentication", "scroll")
+3. Read TL;DR for quick answer
+4. Click file link for full details
+
+### Adding New Learnings
+1. Create file in appropriate category: \`~/.abds/learnings/{category}/\`
+2. Use learning template (see \`~/.abds/templates/learning.md\`)
+3. Add YAML frontmatter with keywords, description, tldr
+4. Run \`~/.abds/bin/update-catalog\` to regenerate this file
+
+### Frontmatter Format
+\`\`\`yaml
+---
+keywords: [keyword1, keyword2, keyword3]
+category: database
+confidence: verified
+tldr: "One-line solution summary"
+description: "Problem description"
+projects_applied:
+  - name: project-name
+    date: YYYY-MM-DD
+    notes: "Brief context"
+---
+\`\`\`
+
+---
+
+## Statistics
+
+**Total Learnings**: $total_entries
+**Categories**: ${#sorted_categories[@]}
+**Last Updated**: $(date +"%B %d, %Y at %H:%M")
+**Generated By**: \`~/.abds/bin/update-catalog\`
+
+---
+
+**ABDS v1.0** - Agent Base Directory Specification
+https://github.com/abds-spec/abds
+EOF
+
+# Atomic replace
+mv "$TEMP_FILE" "$CATALOG_FILE"
+
+echo -e "${GREEN}✓ CATALOG.md updated${NC}"
+echo "  Total entries: $total_entries"
+echo "  Categories: ${#sorted_categories[@]}"
+echo "  File: $CATALOG_FILE"
+echo "  Lines: $(wc -l < "$CATALOG_FILE")"

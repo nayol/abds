@@ -9,7 +9,13 @@
 
 ## Abstract
 
-The Agent Base Directory Specification (ABDS) defines a standard directory layout and documentation system for AI agent development environments. It provides a consistent structure for organizing project documentation, capturing learnings, and maintaining knowledge across development sessions.
+The Agent Base Directory Specification (ABDS) is a **system-level standard** (comparable to FHS, XDG-BDS, POSIX) that defines a consistent directory layout and documentation system for AI agent development environments.
+
+**What "system-level" means**:
+- Universal across all projects (like `/usr/bin` works for all programs)
+- Infrastructure layer (like XDG defines `~/.config` for all apps)
+- Not project-specific (like `package.json` or `requirements.txt`)
+- Operating system for knowledge (like Linux is OS for programs)
 
 ABDS solves the problem of unstructured documentation and scattered knowledge in agent-assisted development by providing:
 
@@ -17,9 +23,10 @@ ABDS solves the problem of unstructured documentation and scattered knowledge in
 2. **Documentation hierarchy** - Four layers from high-level state to detailed sessions
 3. **Learnings system** - Structured knowledge capture from experience
 4. **Standard templates** - Consistent formats for different document types
-5. **Compliance requirements** - What makes a project ABDS-compliant
+5. **Reference implementation scripts** - Optional helper tools in `~/.abds/bin/`
+6. **Compliance requirements** - What makes a project ABDS-compliant
 
-This specification is inspired by the XDG Base Directory Specification and Filesystem Hierarchy Standard (FHS), but focused on knowledge organization rather than program files.
+This specification is inspired by the XDG Base Directory Specification and Filesystem Hierarchy Standard (FHS), applying proven Unix/Linux patterns to knowledge organization.
 
 ---
 
@@ -78,7 +85,15 @@ Following industry standards (Git, npm, Docker), ABDS defines TWO directory leve
 ├── plans/                  # User-level implementation plans
 ├── config/                 # Global configuration
 │   └── abds.conf           # User preferences
-└── templates/              # User-defined templates (optional)
+├── templates/              # User-defined templates (optional)
+└── bin/                    # Reference implementation scripts (optional)
+    ├── update-catalog      # Generate CATALOG.md from frontmatter
+    ├── validate-abds       # Check project compliance
+    ├── init-abds           # Initialize ABDS structure
+    ├── migrate-abds        # Migrate from legacy structure
+    ├── search-learnings    # Search across all learnings
+    ├── create-session      # Create new session folder
+    └── find-files-to-rename # Find files needing better names
 ```
 
 #### Local (Project-level)
@@ -441,8 +456,11 @@ ALL features:
 - [ ] `docs/IMPORTANT/` for critical patterns
 - [ ] Plans directory for implementation plans
 - [ ] All templates used consistently
+- [ ] Reference implementation scripts in `~/.abds/bin/` (optional but recommended)
 
 **Use case**: Large projects, long-term maintenance, cross-project knowledge
+
+**Note**: The `bin/` directory with helper scripts is optional but recommended for automation and workflow efficiency.
 
 ---
 
@@ -553,17 +571,140 @@ mkdir -p .abds/docs
 
 ---
 
-## 10. Tools and Helpers
+## 10. Reference Implementation and Tools
 
-ABDS is a **specification**, not a toolkit. However, reference implementations MAY provide:
+ABDS is a **specification**, not a toolkit. The specification defines structure and conventions that can be followed manually.
 
-**Optional helpers**:
-- `validate-abds` - Check project compliance
-- `update-catalog` - Generate CATALOG.md from frontmatter
-- `rollup-state` - Generate PROJECT-STATE.md from features (future)
-- `init-abds` - Initialize ABDS structure in project
+However, ABDS includes **optional reference implementation scripts** in `~/.abds/bin/` that automate common workflows following Unix/Linux conventions.
 
-**Philosophy**: Specification is primary, tools are secondary.
+### 10.1 Reference Implementation Scripts
+
+**Location**: `~/.abds/bin/`
+
+**Status**: Optional (not required for ABDS compliance)
+
+**Philosophy**: Following Unix precedent (`/usr/bin`, `~/.local/bin`), ABDS provides a standard location for helper scripts that automate documentation workflows.
+
+#### Core Tools
+
+**update-catalog** - Generate CATALOG.md from learnings frontmatter
+```bash
+~/.abds/bin/update-catalog
+```
+- Scans all learnings for YAML frontmatter
+- Generates searchable `CATALOG.md` with keywords, TL;DR, categories
+- Idempotent (safe to run multiple times)
+- **Requirement**: bash, sed, grep
+
+**validate-abds** - Check ABDS compliance level
+```bash
+~/.abds/bin/validate-abds [project-path]
+```
+- Checks for required files and structure
+- Reports compliance level (⭐/⭐⭐/⭐⭐⭐)
+- Suggests missing components
+- **Requirement**: bash
+
+**init-abds** - Initialize ABDS structure in project
+```bash
+cd my-project
+~/.abds/bin/init-abds
+```
+- Creates `.abds/docs/` directory structure
+- Copies templates (PROJECT-STATE.md, STATE.md, etc.)
+- Sets up first feature folder
+- **Requirement**: bash, access to templates
+
+**migrate-abds** - Migrate from legacy structure
+```bash
+~/.abds/bin/migrate-abds --from ~/.claude --to ~/.abds
+```
+- Migrates learnings and plans from tool-specific directories
+- Creates backups before migration
+- Updates file references
+- **Requirement**: bash, tar
+
+#### Documentation Helpers
+
+**search-learnings** - Full-text search across learnings
+```bash
+~/.abds/bin/search-learnings "database RLS"
+~/.abds/bin/search-learnings --category database "postgres"
+```
+- Searches all learnings files
+- Returns matching learnings with context
+- Highlights keywords in output
+- **Requirement**: bash, grep or ripgrep
+
+**create-session** - Create new session folder
+```bash
+~/.abds/bin/create-session
+```
+- Interactive: prompts for feature and description
+- Creates properly named session folder: `{description}_{DD_MM_YYYY}/`
+- Copies session-summary.md template
+- **Requirement**: bash
+
+**find-files-to-rename** - Find generic filenames
+```bash
+~/.abds/bin/find-files-to-rename
+```
+- Scans for files with non-descriptive names
+- Suggests better naming based on content
+- Used in documentation cleanup workflow
+- **Requirement**: bash, grep
+
+### 10.2 Script Design Principles
+
+Following Unix/Linux conventions:
+
+**Naming**: Lowercase with hyphens (verb-noun format)
+- `update-catalog` (not `updateCatalog`, `update-catalog.sh`)
+- Following precedent: `apt-get`, `update-alternatives`
+
+**Portability**: POSIX-compliant bash where possible
+- Work on Linux, macOS, BSD
+- Minimal dependencies (standard Unix tools)
+
+**Safety**: Idempotent and non-destructive
+- Safe to run multiple times
+- Create backups before modifications
+- Clear error messages with suggestions
+
+**Composability**: Pipe-friendly
+- Standard input/output
+- Exit codes: 0 = success, 1 = error, 2 = warning
+- Can be combined with other Unix tools
+
+**Permissions**: Executable scripts without extensions
+- `chmod +x ~/.abds/bin/*`
+- Shebang line: `#!/bin/bash` or `#!/usr/bin/env bash`
+
+### 10.3 Installation
+
+Reference implementation scripts are included in the ABDS repository.
+
+**Option 1: Clone ABDS repository**
+```bash
+git clone https://github.com/abds-spec/abds.git
+cp -r abds/bin/ ~/.abds/bin/
+chmod +x ~/.abds/bin/*
+```
+
+**Option 2: Manual download**
+Download scripts from GitHub releases
+
+**Option 3: Package manager (future)**
+```bash
+# Future: ABDS package distribution
+brew install abds-tools
+```
+
+### 10.4 Documentation
+
+Full documentation for each script is available in `~/.abds/bin/README.md`.
+
+**Philosophy**: Specification is primary, tools are secondary. You can follow ABDS without any tools.
 
 ---
 

@@ -2,18 +2,44 @@
 
 ## What is This Project?
 
-**ABDS (Agent Base Directory Specification)** is an **open standard** for organizing documentation and knowledge in AI agent development environments.
+**ABDS (Agent Base Directory Specification)** is a **system-level open standard** for organizing documentation and knowledge in AI agent development environments.
+
+### ABDS is System-Level Infrastructure (Not Project-Level)
+
+**Critical distinction**:
+
+**Project-level standards** (NOT what ABDS is):
+- `package.json` - Node.js projects only
+- `requirements.txt` - Python projects only
+- `Makefile` - Build configuration for one project
+- `.gitignore` - Git-specific, project-specific
+
+**System-level standards** (WHAT ABDS IS):
+- **FHS** - Works for ALL programs on Linux (`/usr/bin`, `/etc`, `/var`)
+- **XDG** - Works for ALL applications (`~/.config`, `~/.cache`)
+- **POSIX** - Works across ALL Unix-like systems
+- **ABDS** - Works for ALL AI agent projects (`~/.abds/`, `.abds/docs/`) ← **We are here**
+
+### What This Means
+
+**System-level** means:
+1. **Universal**: Works with ANY AI agent (Cursor, Aider, Windsurf, custom)
+2. **Infrastructure**: Foundation layer, not application layer
+3. **Persistent**: Lives in `~/.abds/` (like `~/.config/`), not just in one project
+4. **Cross-project**: One `~/.abds/learnings/` serves ALL projects
+5. **OS-like**: Operating system for knowledge, not just docs
 
 **It is NOT**:
 - ❌ A tool or software
 - ❌ A framework or library
 - ❌ A product or service
+- ❌ Project-specific templates
 
 **It IS**:
-- ✅ A specification document (like POSIX, XDG-BDS, FHS)
-- ✅ A standard for directory layout and file organization
-- ✅ A set of conventions for documentation and learnings
-- ✅ Templates and examples for following the standard
+- ✅ A system-level specification (like POSIX, XDG-BDS, FHS)
+- ✅ Infrastructure standard for knowledge organization
+- ✅ Universal conventions that work with any tool
+- ✅ Templates and reference implementation scripts
 
 ---
 
@@ -278,12 +304,14 @@ After ABDS:
 |----------------|---------------------|
 | **Everything is a file** | Everything is a document (markdown) |
 | **Separation of concerns** | 4 layers (overview/state/architecture/history) |
-| **Standard locations** | PROJECT-STATE.md, STATE.md, CLAUDE.md |
-| **Composability** | Templates compose into complete system |
+| **Standard locations** | PROJECT-STATE.md, STATE.md, CLAUDE.md, `~/.abds/bin/` |
+| **User executables** | `~/.local/bin/` (XDG) → `~/.abds/bin/` (ABDS) |
+| **Composability** | Templates compose into complete system, scripts pipe together |
 | **Simplicity** | Plain text, no database, no complexity |
 | **Portability** | Works on any OS, any agent, any project |
-| **Immutability** | Sessions never change (like `/usr`) |
+| **Immutability** | Sessions never change (like `/usr` read-only) |
 | **Idempotency** | Operations safe to repeat (like `mkdir -p`) |
+| **Tool conventions** | Lowercase hyphenated names (update-catalog, like apt-get) |
 
 ---
 

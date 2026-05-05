@@ -1,0 +1,298 @@
+#!/bin/bash
+#
+# init-abds - Initialize ABDS structure in project
+#
+# Usage: init-abds [project-path]
+#
+# Creates ABDS directory structure and copies templates.
+# Interactive: prompts for feature name.
+#
+# What it creates:
+# - .abds/docs/ directory
+# - PROJECT-STATE.md from template
+# - First feature folder with STATE.md
+# - README.md with navigation
+#
+# Part of ABDS (Agent Base Directory Specification) v1.0
+# https://github.com/abds-spec/abds
+
+set -euo pipefail
+
+# Colors (respect NO_COLOR)
+if [[ -z "${NO_COLOR:-}" ]]; then
+  GREEN='\033[0;32m'
+  YELLOW='\033[1;33m'
+  BLUE='\033[0;34m'
+  BOLD='\033[1m'
+  NC='\033[0m'
+else
+  GREEN=''; YELLOW=''; BLUE=''; BOLD=''; NC=''
+fi
+
+# Project directory (default: current directory)
+PROJECT_DIR="${1:-.}"
+
+# Make path absolute
+PROJECT_DIR=$(cd "$PROJECT_DIR" && pwd)
+PROJECT_NAME=$(basename "$PROJECT_DIR")
+
+# Support ABDS_HOME override
+ABDS_HOME="${ABDS_HOME:-$HOME/.abds}"
+TEMPLATES_DIR="$ABDS_HOME/templates"
+
+# GitHub raw URL for templates if local not available
+GITHUB_TEMPLATES="https://raw.githubusercontent.com/abds-spec/abds/main/TEMPLATES"
+
+echo ""
+echo -e "${BOLD}Initializing ABDS Structure${NC}"
+echo "============================"
+echo ""
+echo "Project: $PROJECT_NAME"
+echo "Path: $PROJECT_DIR"
+echo ""
+
+# Check if already initialized
+if [[ -d "$PROJECT_DIR/.abds/docs" && -f "$PROJECT_DIR/.abds/docs/PROJECT-STATE.md" ]]; then
+  echo -e "${YELLOW}⚠️  ABDS structure already exists${NC}"
+  echo ""
+  read -p "Reinitialize? This will not overwrite existing files. (y/N): " -n 1 -r
+  echo ""
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Cancelled."
+    exit 0
+  fi
+  echo ""
+fi
+
+# Function to copy template
+copy_template() {
+  local template_name="$1"
+  local dest_file="$2"
+  local template_file="$TEMPLATES_DIR/$template_name"
+
+  if [[ -f "$template_file" ]]; then
+    # Copy from local templates
+    cp "$template_file" "$dest_file"
+    echo -e "  ${GREEN}✓${NC} Copied template: $template_name"
+  else
+    # Try to download from GitHub
+    echo -e "  ${BLUE}ℹ${NC}  Downloading template: $template_name"
+    if command -v curl >/dev/null 2>&1; then
+      if curl -sSfL "$GITHUB_TEMPLATES/$template_name" -o "$dest_file" 2>/dev/null; then
+        echo -e "  ${GREEN}✓${NC} Downloaded template: $template_name"
+      else
+        echo -e "  ${YELLOW}⚠${NC}  Could not download template: $template_name"
+        echo -e "      Creating minimal placeholder..."
+        create_placeholder "$template_name" "$dest_file"
+      fi
+    else
+      echo -e "  ${YELLOW}⚠${NC}  curl not available, creating placeholder"
+      create_placeholder "$template_name" "$dest_file"
+    fi
+  fi
+}
+
+# Function to create placeholder templates
+create_placeholder() {
+  local template_name="$1"
+  local dest_file="$2"
+
+  case "$template_name" in
+    PROJECT-STATE.md)
+      cat > "$dest_file" <<'EOF'
+# Project State
+
+**Last Updated**: YYYY-MM-DD
+
+## Current Focus
+- What you're working on right now
+
+## What Works ✅
+- Features that are deployed and working
+
+## Active Problems ⚠️
+- Issues being investigated
+
+## Recent Changes (Last 7 Days)
+- Recent updates
+
+## Features
+- [feature-name](feature-name/STATE.md) - Status
+EOF
+      ;;
+    STATE.md)
+      cat > "$dest_file" <<'EOF'
+# Feature State
+
+**Last Updated**: YYYY-MM-DD
+
+## What's Working
+- Deployed features
+
+## Known Issues
+- Current bugs
+
+## Key Files
+- `path/to/file.ext` - Description
+
+## Configuration
+- Setting: value
+
+## Dependencies
+- Package/service: version
+EOF
+      ;;
+    README.md)
+      cat > "$dest_file" <<'EOF'
+# Project Documentation
+
+This directory contains ABDS-compliant documentation.
+
+## Structure
+
+- **PROJECT-STATE.md** - Current project overview
+- **{feature}/STATE.md** - Feature current state
+- **{feature}/CLAUDE.md** - Architecture decisions
+- **{feature}/sessions/** - Work history
+
+## Features
+
+- [feature-name](feature-name/STATE.md) - Brief description
+
+## Quick Links
+
+- [ABDS Specification](https://github.com/abds-spec/abds)
+EOF
+      ;;
+  esac
+
+  echo -e "  ${GREEN}✓${NC} Created placeholder: $template_name"
+}
+
+# Step 1: Create directories
+echo "Step 1: Creating directory structure..."
+mkdir -p "$PROJECT_DIR/.abds/docs"
+echo -e "  ${GREEN}✓${NC} Created .abds/docs/"
+
+# Step 2: Copy PROJECT-STATE.md
+echo ""
+echo "Step 2: Creating PROJECT-STATE.md..."
+if [[ ! -f "$PROJECT_DIR/.abds/docs/PROJECT-STATE.md" ]]; then
+  copy_template "PROJECT-STATE.md" "$PROJECT_DIR/.abds/docs/PROJECT-STATE.md"
+
+  # Update project name in template
+  if [[ -f "$PROJECT_DIR/.abds/docs/PROJECT-STATE.md" ]]; then
+    # Try to update the file with project name (if sed available)
+    if command -v sed >/dev/null 2>&1; then
+      sed -i.bak "s/Project State/$(basename "$PROJECT_DIR") - Project State/" "$PROJECT_DIR/.abds/docs/PROJECT-STATE.md" 2>/dev/null || true
+      rm -f "$PROJECT_DIR/.abds/docs/PROJECT-STATE.md.bak" 2>/dev/null || true
+    fi
+  fi
+else
+  echo -e "  ${BLUE}ℹ${NC}  PROJECT-STATE.md already exists (not overwriting)"
+fi
+
+# Step 3: Copy README.md
+echo ""
+echo "Step 3: Creating README.md..."
+if [[ ! -f "$PROJECT_DIR/.abds/docs/README.md" ]]; then
+  copy_template "README.md" "$PROJECT_DIR/.abds/docs/README.md"
+else
+  echo -e "  ${BLUE}ℹ${NC}  README.md already exists (not overwriting)"
+fi
+
+# Step 4: Create first feature (interactive)
+echo ""
+echo "Step 4: Creating first feature..."
+echo ""
+
+read -p "First feature name (e.g., 'authentication', 'database', or 'skip'): " feature_name
+
+if [[ -n "$feature_name" && "$feature_name" != "skip" ]]; then
+  # Validate feature name (lowercase, hyphens only)
+  if [[ ! "$feature_name" =~ ^[a-z0-9-]+$ ]]; then
+    echo -e "${YELLOW}⚠️  Feature name should be lowercase with hyphens (e.g., 'my-feature')${NC}"
+    echo "Using: $(echo "$feature_name" | tr '[:upper:]' '[:lower:]' | tr '_' '-' | sed 's/[^a-z0-9-]//g')"
+    feature_name=$(echo "$feature_name" | tr '[:upper:]' '[:lower:]' | tr '_' '-' | sed 's/[^a-z0-9-]//g')
+  fi
+
+  feature_dir="$PROJECT_DIR/.abds/docs/$feature_name"
+
+  mkdir -p "$feature_dir/sessions"
+  echo -e "  ${GREEN}✓${NC} Created $feature_name/"
+  echo -e "  ${GREEN}✓${NC} Created $feature_name/sessions/"
+
+  # Copy STATE.md
+  if [[ ! -f "$feature_dir/STATE.md" ]]; then
+    copy_template "STATE.md" "$feature_dir/STATE.md"
+
+    # Update feature name in template
+    if [[ -f "$feature_dir/STATE.md" ]]; then
+      if command -v sed >/dev/null 2>&1; then
+        sed -i.bak "s/Feature State/$(echo "$feature_name" | tr '-' ' ' | sed 's/\b\(.\)/\u\1/g') - State/" "$feature_dir/STATE.md" 2>/dev/null || true
+        rm -f "$feature_dir/STATE.md.bak" 2>/dev/null || true
+      fi
+    fi
+  else
+    echo -e "  ${BLUE}ℹ${NC}  $feature_name/STATE.md already exists (not overwriting)"
+  fi
+
+  # Update README.md with feature link
+  if [[ -f "$PROJECT_DIR/.abds/docs/README.md" ]]; then
+    if ! grep -q "$feature_name/STATE.md" "$PROJECT_DIR/.abds/docs/README.md"; then
+      # Add feature to README
+      if command -v sed >/dev/null 2>&1; then
+        echo "" >> "$PROJECT_DIR/.abds/docs/README.md"
+        echo "- [$feature_name]($feature_name/STATE.md) - Feature description" >> "$PROJECT_DIR/.abds/docs/README.md"
+        echo -e "  ${GREEN}✓${NC} Added $feature_name to README.md"
+      fi
+    fi
+  fi
+
+  echo ""
+  echo -e "${GREEN}✓ Feature '$feature_name' created${NC}"
+else
+  echo "Skipped feature creation."
+fi
+
+# Final summary
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo -e "${BOLD}${GREEN}✓ ABDS structure created${NC}"
+echo ""
+echo "Created:"
+echo "  • .abds/docs/"
+echo "  • PROJECT-STATE.md"
+echo "  • README.md"
+if [[ -n "${feature_name:-}" && "$feature_name" != "skip" ]]; then
+  echo "  • $feature_name/"
+  echo "    ├─ STATE.md"
+  echo "    └─ sessions/"
+fi
+echo ""
+echo "Next steps:"
+echo "  1. Edit .abds/docs/PROJECT-STATE.md (describe current project)"
+if [[ -n "${feature_name:-}" && "$feature_name" != "skip" ]]; then
+  echo "  2. Edit .abds/docs/$feature_name/STATE.md (describe feature)"
+  echo "  3. Start documenting in sessions/ as you work"
+else
+  echo "  2. Create feature folders: mkdir -p .abds/docs/my-feature"
+  echo "  3. Add STATE.md to features"
+fi
+echo ""
+
+# Check compliance
+echo "Checking compliance..."
+echo ""
+
+if command -v "$ABDS_HOME/bin/validate-abds" >/dev/null 2>&1; then
+  "$ABDS_HOME/bin/validate-abds" "$PROJECT_DIR" || true
+else
+  echo -e "${BLUE}ℹ${NC}  Install validate-abds to check compliance:"
+  echo "    https://github.com/abds-spec/abds"
+fi
+
+echo ""
+echo "Done! 🎉"
+echo ""
