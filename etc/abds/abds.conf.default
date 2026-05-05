@@ -1,0 +1,20 @@
+# ABDS Configuration
+# Location: ~/.abds/etc/abds/abds.conf
+
+# Learnings directory
+LEARNINGS_DIR="${ABDS_HOME:-$HOME/.abds}/var/lib/abds/learnings"
+
+# Plans directory
+PLANS_DIR="${ABDS_HOME:-$HOME/.abds}/var/lib/abds/plans"
+
+# Templates directory
+TEMPLATES_DIR="${ABDS_HOME:-$HOME/.abds}/share/abds/templates"
+
+# Auto-update catalog after saving learning
+AUTO_UPDATE_CATALOG=true
+
+# Default editor for create-session
+EDITOR="${EDITOR:-vim}"
+
+# Catalog format
+CATALOG_FORMAT="markdown"  # markdown, json, yaml

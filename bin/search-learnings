@@ -1,0 +1,152 @@
+#!/bin/bash
+#
+# search-learnings - Search across all ABDS learnings
+#
+# Usage: search-learnings [OPTIONS] QUERY
+#
+# Options:
+#   --category CATEGORY    Search only in specific category
+#   --keyword KEYWORD      Search by keyword in frontmatter
+#   -h, --help            Show this help
+
+set -euo pipefail
+
+# Default ABDS location
+ABDS_HOME="${ABDS_HOME:-$HOME/.abds}"
+LEARNINGS_DIR="$ABDS_HOME/var/lib/abds/learnings"
+
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+GRAY='\033[0;90m'
+NC='\033[0m' # No Color
+
+# Parse options
+CATEGORY=""
+KEYWORD=""
+QUERY=""
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --category)
+            CATEGORY="$2"
+            shift 2
+            ;;
+        --keyword)
+            KEYWORD="$2"
+            shift 2
+            ;;
+        -h|--help)
+            cat << EOF
+search-learnings - Search across all ABDS learnings
+
+Usage:
+  search-learnings [OPTIONS] QUERY
+
+Options:
+  --category CATEGORY    Search only in specific category
+  --keyword KEYWORD      Search by keyword in frontmatter
+  -h, --help            Show this help
+
+Examples:
+  search-learnings "RLS security"
+  search-learnings --category database "postgres"
+  search-learnings --keyword authentication
+
+EOF
+            exit 0
+            ;;
+        *)
+            QUERY="$*"
+            break
+            ;;
+    esac
+done
+
+if [[ -z "$QUERY" && -z "$KEYWORD" ]]; then
+    echo "Error: No search query provided"
+    echo "Usage: search-learnings [OPTIONS] QUERY"
+    echo "Try 'search-learnings --help' for more information"
+    exit 1
+fi
+
+if [[ ! -d "$LEARNINGS_DIR" ]]; then
+    echo "Error: Learnings directory not found: $LEARNINGS_DIR"
+    echo "Have you installed ABDS? Run: ./install.sh"
+    exit 1
+fi
+
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BLUE}🔍 Searching learnings...${NC}"
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+
+# Build search path
+SEARCH_PATH="$LEARNINGS_DIR"
+if [[ -n "$CATEGORY" ]]; then
+    SEARCH_PATH="$LEARNINGS_DIR/$CATEGORY"
+    if [[ ! -d "$SEARCH_PATH" ]]; then
+        echo "Error: Category not found: $CATEGORY"
+        exit 1
+    fi
+fi
+
+# Search function
+search_learnings() {
+    local found=0
+
+    # Use ripgrep if available, otherwise grep
+    if command -v rg >/dev/null 2>&1; then
+        GREP_CMD="rg -i --color=never"
+    else
+        GREP_CMD="grep -ri"
+    fi
+
+    # Search by keyword in frontmatter
+    if [[ -n "$KEYWORD" ]]; then
+        while IFS= read -r file; do
+            if grep -q "^keywords:.*$KEYWORD" "$file"; then
+                display_learning "$file"
+                ((found++))
+            fi
+        done < <(find "$SEARCH_PATH" -name "*.md" -type f ! -name "CATALOG.md")
+    # Search by query in content
+    elif [[ -n "$QUERY" ]]; then
+        while IFS= read -r file; do
+            display_learning "$file"
+            ((found++))
+        done < <(find "$SEARCH_PATH" -name "*.md" -type f ! -name "CATALOG.md" -exec $GREP_CMD -l "$QUERY" {} \;)
+    fi
+
+    echo ""
+    echo -e "${GREEN}Found $found matching learning(s)${NC}"
+}
+
+# Display learning with metadata
+display_learning() {
+    local file="$1"
+    local filename=$(basename "$file")
+    local category=$(basename "$(dirname "$file")")
+
+    echo -e "${YELLOW}📄 $category/$filename${NC}"
+
+    # Extract frontmatter
+    if head -1 "$file" | grep -q "^---$"; then
+        local keywords=$(sed -n '/^keywords:/p' "$file" | head -1 | sed 's/keywords: *\[//; s/\]//; s/"//g')
+        local tldr=$(sed -n '/^tldr:/p' "$file" | head -1 | sed 's/tldr: *"//; s/"$//')
+        local description=$(sed -n '/^description:/p' "$file" | head -1 | sed 's/description: *"//; s/"$//')
+
+        [[ -n "$keywords" ]] && echo -e "   ${GRAY}Keywords: $keywords${NC}"
+        [[ -n "$description" ]] && echo -e "   $description"
+        [[ -n "$tldr" ]] && echo -e "   ${GREEN}→ $tldr${NC}"
+    else
+        # Fallback: show first paragraph
+        sed -n '/^# /,/^$/p' "$file" | sed '1d; /^$/d; /^---$/d; /^\*\*/d' | head -2
+    fi
+
+    echo ""
+}
+
+# Run search
+search_learnings

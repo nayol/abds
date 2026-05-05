@@ -1,0 +1,148 @@
+#!/usr/bin/env bash
+#
+# find-files-to-rename - Find documentation files with generic names
+#
+# Purpose: Fast pattern matching to find files that likely need better names.
+#          Model reads content and decides which ones actually need renaming.
+#
+# Division of Labor:
+#   Script (fast): Find candidates with generic patterns
+#   Model (smart): Read content, decide if name is descriptive
+#
+# Usage:
+#   find-files-to-rename
+#
+# What it finds:
+#   1. Generic single-word names: work.md, bug.md, raw.md, temp.md, notes.md
+#   2. Generic with numbers: work1.md, raw2.md, bug-3.md
+#   3. Very short names: Any .md file < 10 characters
+#
+# What it skips:
+#   - Descriptive names: typescript-build-fix-raw.md ✓
+#   - Documentation files: README.md, CLAUDE.md, STATE.md ✓
+#   - Multi-word descriptive: privacy-fix.md, oauth-implementation.md ✓
+#
+
+set -euo pipefail
+
+# Colors
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Usage
+usage() {
+    cat << 'EOF'
+Usage: find-files-to-rename
+
+Find .md files with generic names that need better descriptions.
+
+FINDS:
+    ✗ work.md, work1.md, work-2.md
+    ✗ bug.md, bug-raw.md
+    ✗ raw.md, raw2.md, raw3.md
+    ✗ temp.md, notes.md, doc.md
+    ✗ Any filename < 10 characters (e.g., fix.md, ui.md)
+
+SKIPS:
+    ✓ typescript-build-fix-raw.md (descriptive)
+    ✓ privacy-fix-session.md (descriptive)
+    ✓ README.md, CLAUDE.md, STATE.md (standard docs)
+
+NEXT STEP:
+    Run /rename-files-add-timestamp to organize flagged files
+
+EOF
+    exit 0
+}
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --help|-h)
+            usage
+            ;;
+        *)
+            echo "Unknown option: $1"
+            usage
+            ;;
+    esac
+done
+
+# Check if in git repo
+if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+    echo -e "${RED}Error: Not in a git repository${NC}"
+    exit 1
+fi
+
+# Find project root
+PROJECT_ROOT=$(git rev-parse --show-toplevel)
+cd "$PROJECT_ROOT"
+
+echo -e "${BLUE}🔍 Scanning for files with generic names...${NC}\n"
+
+# Candidates array
+declare -a GENERIC_FILES
+
+# Find all .md files
+while IFS= read -r file; do
+    [ -f "$file" ] || continue
+
+    filename=$(basename "$file")
+
+    # Skip standard documentation files
+    if [[ "$filename" =~ ^(README|CLAUDE|STATE|INDEX|CHANGELOG|LICENSE)\.md$ ]]; then
+        continue
+    fi
+
+    # Pattern 1: Generic single words with optional numbers/dashes
+    # Examples: work.md, work1.md, work-2.md, bug.md, bug-raw.md
+    if [[ "$filename" =~ ^(work|bug|raw|temp|notes|doc|session|test|fix|ui|db)[0-9-]*\.md$ ]]; then
+        GENERIC_FILES+=("$file")
+        continue
+    fi
+
+    # Pattern 2: work-raw, bug-raw, etc. (without numbers)
+    if [[ "$filename" =~ ^(work|bug|temp|notes|doc)-raw\.md$ ]]; then
+        GENERIC_FILES+=("$file")
+        continue
+    fi
+
+    # Pattern 3: Very short filenames (< 10 chars total)
+    # Examples: fix.md (6), ui.md (5), raw.md (6)
+    # Skip: privacy-fix.md (14), typescript-build.md (20)
+    if [[ ${#filename} -lt 10 ]]; then
+        GENERIC_FILES+=("$file")
+        continue
+    fi
+
+done < <(find docs utufdbox-web/docs -name "*.md" -type f 2>/dev/null)
+
+# Display results
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+if [ ${#GENERIC_FILES[@]} -eq 0 ]; then
+    echo -e "${GREEN}✅ No files with generic names found!${NC}"
+    echo -e "${GREEN}All documentation has descriptive names.${NC}"
+else
+    echo -e "${YELLOW}📝 Files with generic names (${#GENERIC_FILES[@]} found):${NC}\n"
+
+    for file in "${GENERIC_FILES[@]}"; do
+        echo -e "  ${RED}✗${NC} $file"
+    done
+
+    echo ""
+    echo -e "${BLUE}These files might need better names.${NC}"
+    echo ""
+    echo -e "${GREEN}Next step: Run /rename-files-add-timestamp${NC}"
+    echo -e "${BLUE}The model will:${NC}"
+    echo -e "  1. Read each file's content"
+    echo -e "  2. Generate descriptive name from content"
+    echo -e "  3. Move to appropriate session folder"
+fi
+
+echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+exit 0
