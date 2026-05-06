@@ -2,7 +2,7 @@
 
 ## What is This Project?
 
-**ABDS (Agent Base Directory Specification)** is a **system-level open standard** for organizing documentation and knowledge in AI agent development environments.
+**ABDS (Agent Base Directory Specification)** is a **filesystem standard** for documentation in agent-assisted software development.
 
 ### ABDS is System-Level Infrastructure (Not Project-Level)
 

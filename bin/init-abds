@@ -172,7 +172,44 @@ EOF
 # Step 1: Create directories
 echo "Step 1: Creating directory structure..."
 mkdir -p "$PROJECT_DIR/.abds/docs"
+mkdir -p "$PROJECT_DIR/.abds/plans"
 echo -e "  ${GREEN}✓${NC} Created .abds/docs/"
+echo -e "  ${GREEN}✓${NC} Created .abds/plans/"
+
+# Step 1.5: Create learnings structure (hybrid organization)
+echo ""
+echo "  Creating learnings/ (hybrid organization)..."
+mkdir -p "$PROJECT_DIR/.abds/learnings"/{mistakes,anti-patterns,guides,workflows,troubleshooting}
+echo -e "  ${GREEN}✓${NC} Created special categories:"
+echo -e "    mistakes/, anti-patterns/, guides/, workflows/, troubleshooting/"
+echo -e "  ${BLUE}ℹ${NC}  Add domain categories as needed: database/, ui/, etc."
+
+# Create CATALOG.md
+cat > "$PROJECT_DIR/.abds/learnings/CATALOG.md" << 'EOF'
+<!-- GENERATED FILE - DO NOT EDIT MANUALLY -->
+<!-- Run: ~/.abds/bin/update-catalog to regenerate -->
+
+# Project Learnings Catalog
+
+**Organization**: Hybrid (special categories + domain categories)
+
+## Special Categories
+
+- **mistakes/** - Costly errors (2+ hours debugging)
+- **anti-patterns/** - Known bad practices to avoid
+- **guides/** - How-to documentation and tutorials
+- **workflows/** - Repeatable processes and checklists
+- **troubleshooting/** - Debugging and problem-solving
+
+## Domain Categories
+
+(Add as needed: database/, ui/, security/, etc.)
+
+---
+
+Run `~/.abds/bin/update-catalog` to auto-generate detailed catalog.
+EOF
+echo -e "  ${GREEN}✓${NC} Created CATALOG.md"
 
 # Step 2: Copy PROJECT-STATE.md
 echo ""

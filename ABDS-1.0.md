@@ -9,7 +9,7 @@
 
 ## Abstract
 
-The Agent Base Directory Specification (ABDS) is a **system-level standard** (comparable to FHS, XDG-BDS, POSIX) that defines a consistent directory layout and documentation system for AI agent development environments.
+The Agent Base Directory Specification (ABDS) is a **filesystem standard** (comparable to FHS, XDG-BDS, POSIX) that defines a consistent directory layout and documentation system for agent-assisted software development.
 
 **What "system-level" means**:
 - Universal across all projects (like `/usr/bin` works for all programs)
@@ -129,44 +129,59 @@ my-project/.abds/
 The base directory MUST contain a `docs/` subdirectory with this structure:
 
 ```
-.agent/
-└── docs/
-    ├── PROJECT-STATE.md              # Layer 1: Project overview (REQUIRED)
-    ├── {feature}/                    # Layer 2-4: Feature documentation
-    │   ├── STATE.md                  # Layer 2: Current state (REQUIRED)
-    │   ├── CLAUDE.md                 # Layer 3: Architecture (RECOMMENDED)
-    │   └── sessions/                 # Layer 4: History (RECOMMENDED)
-    │       └── {description}_{DATE}/ # Session folders
-    │           ├── {description}.md  # Session summary
-    │           └── {description}-raw.md  # Optional transcript
-    └── IMPORTANT/                    # Critical patterns (OPTIONAL)
-        ├── CLAUDE.md                 # Index of critical content
-        ├── GUIDES/                   # How-to guides
-        ├── MISTAKES/                 # Documented errors
-        └── LEARNINGS/                # Project-specific learnings
+.abds/
+├── docs/
+│   ├── PROJECT-STATE.md              # Layer 1: Project overview (REQUIRED)
+│   └── {feature}/                    # Layer 2-4: Feature documentation
+│       ├── STATE.md                  # Layer 2: Current state (REQUIRED)
+│       ├── CLAUDE.md                 # Layer 3: Architecture (RECOMMENDED)
+│       └── sessions/                 # Layer 4: History (RECOMMENDED)
+│           └── {description}_{DATE}/ # Session folders
+│               ├── {description}.md  # Session summary
+│               └── {description}-raw.md  # Optional transcript
+└── learnings/                        # Project-specific knowledge (OPTIONAL)
+    ├── CATALOG.md                    # Auto-generated index
+    └── {category}/                   # Organized by category
+        └── *.md                      # Learning files
 ```
 
-### 2.3 Global Learnings Structure (REQUIRED for cross-project knowledge)
+### 2.3 Learnings Structure (OPTIONAL - for accumulated knowledge)
 
-**Location**: `$HOME/.abds/learnings/`
+**Applies to**: Both global (`~/.abds/learnings/`) and local (`project/.abds/learnings/`)
+
+**Organization**: Hybrid approach mixing special categories + domain categories
 
 **Structure**:
 ```
-~/.abds/learnings/
+.abds/learnings/
 ├── CATALOG.md                        # Searchable index (GENERATED)
-├── {category}/                       # Category-based organization
-│   ├── debugging/
-│   ├── database/
-│   ├── ui/
-│   ├── testing/
-│   └── ...
-└── sessions/                         # Session-based learnings
-    └── {description}_{DATE}/
-        ├── {description}.md
-        └── {description}-raw.md
+│
+├── mistakes/                         # SPECIAL: Costly errors (cross-domain)
+├── anti-patterns/                    # SPECIAL: Bad practices to avoid
+├── guides/                           # SPECIAL: How-to documentation
+├── workflows/                        # SPECIAL: Process documentation
+├── troubleshooting/                  # SPECIAL: Debugging guides
+│
+├── database/                         # DOMAIN: Database patterns
+├── ui/                               # DOMAIN: UI patterns
+├── security/                         # DOMAIN: Security patterns
+└── {domain}/                         # DOMAIN: Other technical domains
 ```
 
-**Purpose**: Knowledge that applies across multiple projects (debugging patterns, database techniques, UI patterns)
+**Special categories** (cross-domain, high-priority):
+- `mistakes/` - Costly errors that took 2+ hours to debug
+- `anti-patterns/` - Known bad practices to avoid
+- `guides/` - How-to documentation and tutorials
+- `workflows/` - Repeatable processes and checklists
+- `troubleshooting/` - Debugging and problem-solving guides
+
+**Domain categories** (technology/feature-specific):
+- `database/`, `ui/`, `security/`, etc. - Technical domain knowledge
+- Use as needed for your project's domains
+
+**Global vs Local**:
+- **Global** (`~/.abds/learnings/`): Cross-project knowledge
+- **Local** (`project/.abds/learnings/`): Project-specific domain knowledge
 
 ### 2.4 Plans Structure (OPTIONAL)
 
@@ -455,7 +470,7 @@ ALL features:
 
 - [ ] All Level 2 requirements
 - [ ] Learnings system with CATALOG.md (if applicable)
-- [ ] `docs/IMPORTANT/` for critical patterns
+- [ ] Project learnings with `.abds/learnings/` (if applicable)
 - [ ] Plans directory for implementation plans
 - [ ] All templates used consistently
 - [ ] Reference implementation scripts in `~/.abds/bin/` (optional but recommended)
@@ -848,7 +863,30 @@ Legacy projects using `.claude/` should migrate to `.abds/` for compliance.
 
 ### Q: Can I have learnings at both project and user level?
 
-**A**: Yes. Project-specific learnings go in `.agent/docs/IMPORTANT/LEARNINGS/`. Cross-project learnings go in `~/.agent/learnings/`.
+**A**: Yes.
+
+- **Project-specific learnings**: `project/.abds/learnings/` (domain knowledge for this project only)
+- **Cross-project learnings**: `~/.abds/learnings/` (knowledge that applies to multiple projects)
+
+Both use the same hybrid structure: special categories (mistakes/, workflows/, troubleshooting/) + domain categories (database/, ui/, etc.)
+
+### Q: When should I use special categories vs domain categories?
+
+**A**:
+
+**Special categories** (top-level):
+- `mistakes/` - Costly errors you want to check before similar work
+- `anti-patterns/` - Known bad practices to avoid in this codebase
+- `guides/` - How-to documentation that applies across domains
+- `workflows/` - Step-by-step processes that apply broadly
+- `troubleshooting/` - Cross-domain debugging guides
+
+**Domain categories**:
+- `database/` - PostgreSQL/database-specific patterns
+- `ui/` - React/UI-specific patterns
+- `tauri-swift-ffi/` - Technology stack specific to this project
+
+Use special categories when you want to see ALL items of that type across all domains.
 
 ### Q: Do I need scripts/tools to use ABDS?
 

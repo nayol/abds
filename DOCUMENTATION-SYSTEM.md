@@ -479,9 +479,11 @@ docs/
 │   └── sessions/
 │
 ├── IMPORTANT/                                   ← Critical patterns
-│   ├── CLAUDE.md                                ← ✅ Critical reference
-│   ├── anti-patterns/
-│   └── learnings/
+│   ├── CLAUDE.md                                ← ✅ Critical reference index
+│   ├── GUIDES/                                  ← How-to guides
+│   ├── MISTAKES/                                ← Documented errors
+│   ├── LEARNINGS/                               ← Project-specific learnings
+│   └── ANTI-PATTERNS/                           ← Known bad practices
 │
 └── meta/                                        ← Meta documentation
     └── documentation-reorganization_19_04_2026_14_00/
