@@ -1,6 +1,14 @@
 # Internal working documentation (not part of spec)
 docs/
 
+# ABDS META - Development work on the specification itself
+# This repository follows the two-repository pattern:
+#   - Root level = STANDARD (what users download)
+#   - .abds/ = META (how we develop the spec - dogfooding ABDS on ABDS)
+# We keep our development process private to maintain clean distribution.
+# Users get the spec, not our internal discussions.
+.abds/
+
 # Claude Code internal files
 .claude/
 

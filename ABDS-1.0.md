@@ -9,7 +9,7 @@
 
 ## Abstract
 
-The Agent Base Directory Specification (ABDS) is a **filesystem standard** (comparable to FHS, XDG-BDS, POSIX) that defines a consistent directory layout and documentation system for agent-assisted software development.
+The Agent Base Directory Specification (ABDS) is a **filesystem standard** (comparable to FHS, XDG-BDS, POSIX) for organizing documentation and knowledge in AI agent-assisted software development.
 
 **What "system-level" means**:
 - Universal across all projects (like `/usr/bin` works for all programs)
@@ -54,11 +54,19 @@ ABDS provides a **standard structure** that:
 
 ### Design Principles
 
-1. **Separation of concerns**: Current state ≠ architecture ≠ history ≠ learnings
-2. **Hierarchical with recurring patterns**: Same structure at different scales
-3. **Human-readable first**: Markdown, YAML, standard formats
-4. **Git-friendly**: Plain text, immutable history, clear diffs
-5. **LLM-optimized**: Structured for agent parsing and generation
+1. **Semantic Clarity for Universal Comprehension**: Modern LLMs process meaning similarly to humans because they're trained on human language and thought patterns. Therefore, ABDS optimizes for semantic clarity that serves both audiences simultaneously. Write for human developers - use descriptive names, clear structure, and explain "why" - and LLMs will understand equally well. There is no trade-off between human readability and LLM comprehension; they converge on the same optimum: meaningful, self-documenting organization.
+
+2. **Modern Standards Over Legacy**: ABDS follows modern, intelligent practices rooted in semantic clarity, not outdated conventions. We reject blind adherence to historical standards (Unix abbreviations, FHS complexity in user directories) in favor of approaches that optimize for comprehension. Precedents like XDG Base Directory (2010) over FHS (1994) show the evolution toward clarity.
+
+3. **Separation of concerns**: Current state ≠ architecture ≠ history ≠ learnings
+
+4. **Hierarchical with recurring patterns**: Same structure at different scales
+
+5. **Human-readable first**: Markdown, YAML, standard formats
+
+6. **Git-friendly**: Plain text, immutable history, clear diffs
+
+7. **Optimize for reading, not writing**: Code and paths are read 10x more than written. Prioritize comprehension over brevity.
 
 ---
 

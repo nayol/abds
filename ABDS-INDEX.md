@@ -8,7 +8,7 @@
 
 ## What is ABDS?
 
-ABDS is a **filesystem standard** for documentation in agent-assisted software development.
+ABDS is a **filesystem standard** for organizing documentation and knowledge in AI agent-assisted software development.
 
 Think of it as:
 - **Like FHS for programs** (`/usr/bin`, `/etc`) → **ABDS for knowledge** (`~/.abds/`)

@@ -147,9 +147,8 @@ All tools available in `~/.abds/bin/`:
 | `create-session` | Create timestamped session folder |
 | `find-files-to-rename` | Find unorganized files |
 
-**Setup scripts** (in `bin/` of this repo):
-- `setup-global-abds.sh` - Install ~/.abds/ structure
-- `install-abds-global.sh` - Alternative installer
+**Setup script** (in `bin/` of this repo):
+- `setup-global-abds.sh` - Install ~/.abds/ structure with recommended categories
 - Migration scripts for existing projects
 
 ### Add to PATH (Optional)
