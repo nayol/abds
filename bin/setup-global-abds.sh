@@ -165,6 +165,40 @@ else
     echo "  ✓ Already in PATH"
 fi
 
+# Install CLI wrapper
+echo ""
+echo "Step 6: Installing CLI wrapper..."
+
+# Get the directory where this script lives
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Copy wrapper to ~/.abds/bin/
+if [ -f "$SCRIPT_DIR/abds" ]; then
+    cp "$SCRIPT_DIR/abds" "$HOME/.abds/bin/abds"
+    chmod +x "$HOME/.abds/bin/abds"
+    echo "  ✓ Created ~/.abds/bin/abds"
+else
+    echo "  ⚠  Wrapper script not found at $SCRIPT_DIR/abds"
+    echo "     You may need to copy it manually"
+fi
+
+# Create symlink in ~/.local/bin/
+mkdir -p "$HOME/.local/bin"
+ln -sf "$HOME/.abds/bin/abds" "$HOME/.local/bin/abds"
+echo "  ✓ Symlinked to ~/.local/bin/abds"
+
+# Check if ~/.local/bin is in PATH
+if ! echo "$PATH" | grep -q ".local/bin"; then
+    echo ""
+    echo "  ⚠️  ~/.local/bin not in PATH"
+    echo "     Add to ~/.zshrc or ~/.bashrc:"
+    echo '     export PATH="$HOME/.local/bin:$PATH"'
+    echo "     Then: source ~/.zshrc (or ~/.bashrc)"
+else
+    echo "  ✓ ~/.local/bin is in PATH"
+    echo "  ✓ You can now use: abds <command>"
+fi
+
 # Summary
 echo ""
 echo "=============================="
@@ -172,7 +206,9 @@ echo "Global ABDS Setup Complete! ✅"
 echo ""
 echo "Structure:"
 echo "  ~/.abds/"
-echo "    ├── bin/              (8 tools)"
+echo "    ├── bin/"
+echo "    │   ├── abds          (CLI wrapper)"
+echo "    │   └── ...           (8 tools)"
 echo "    ├── learnings/"
 echo "    │   ├── CATALOG.md"
 echo "    │   ├── database/"
@@ -188,8 +224,15 @@ echo "    │   └── new-project-setup-checklist.md"
 echo "    └── templates/        (complete set)"
 echo ""
 echo "Next steps:"
-echo "  1. Add learnings: Edit files in ~/.abds/learnings/{category}/"
-echo "  2. Generate catalog: ~/.abds/bin/update-catalog"
-echo "  3. Search learnings: ~/.abds/bin/search-learnings 'keyword'"
-echo "  4. New project: cd project && ~/.abds/bin/init-abds"
+echo "  1. Try the CLI: abds search 'keyword'"
+echo "  2. Initialize project: cd your-project && abds init"
+echo "  3. Check compliance: abds validate"
+echo "  4. Add learnings to: ~/.abds/learnings/{category}/"
+echo ""
+echo "CLI Commands:"
+echo "  abds init              # Initialize ABDS in project"
+echo "  abds search <keywords> # Search learnings"
+echo "  abds catalog           # Update learnings catalog"
+echo "  abds validate          # Check compliance level"
+echo "  abds session <name>    # Create session folder"
 echo ""

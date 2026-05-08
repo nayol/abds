@@ -40,13 +40,89 @@ chmod +x ~/.abds/bin/*
 
 ```bash
 cd my-project
-~/.abds/bin/init-abds
+abds init
 
 # Creates:
 # .abds/docs/PROJECT-STATE.md
-# .abds/learnings/ (with 5 special categories)
-# .abds/plans/
+# .abds/docs/feature/STATE.md (with feature name prompt)
+# README.md with quick links
 ```
+
+---
+
+## Usage
+
+### CLI Commands
+
+The `abds` command provides a unified interface to all ABDS tools:
+
+```bash
+# Initialize project
+abds init              # Initialize ABDS in current project
+abds i                 # Short alias
+
+# Search & Discovery
+abds search <keywords> # Search learnings across all categories
+abds s <keywords>      # Short alias
+
+# Maintenance
+abds catalog           # Update learnings catalog (CATALOG.md)
+abds validate          # Check ABDS compliance level (⭐/⭐⭐/⭐⭐⭐)
+abds v                 # Short alias
+
+# Project Management
+abds session <name>    # Create new session folder with timestamp
+abds find-files        # Find documentation files needing better names
+abds generate-index    # Generate ABDS-INDEX.md for navigation
+
+# Help
+abds --help            # Show all commands
+abds --version         # Show ABDS version
+```
+
+### Examples
+
+```bash
+# Search for RLS patterns
+abds search "database RLS"
+
+# Quick search with alias
+abds s "oauth pkce"
+
+# Initialize in new project
+cd my-new-project
+abds init
+
+# Check what compliance level you've achieved
+abds validate
+
+# Create a work session
+abds session "implement-auth-feature"
+
+# Update catalog after adding learnings
+abds catalog
+```
+
+### Using with AI Agents
+
+ABDS works with **any agent** via filesystem + CLI:
+
+```bash
+# In Claude Code skill
+abds search "keywords"
+
+# In Cursor extension
+abds catalog
+
+# In custom script
+results=$(abds search "pattern")
+```
+
+**See**: [Agent Integration Guide](docs/integrations/AGENT-INTEGRATION.md)
+
+**Works with**: Claude Code, Cursor, Aider, Windsurf, custom scripts, any bash-capable tool.
+
+**Why it works**: Filesystem + CLI are universal interfaces. No agent-specific code needed.
 
 ---
 
@@ -135,28 +211,37 @@ aqua-voice/.abds/learnings/
 
 ## Tools
 
-All tools available in `~/.abds/bin/`:
+### CLI Wrapper (Recommended)
 
-| Tool | Purpose |
-|------|---------|
-| `init-abds` | Initialize ABDS in project |
-| `validate-abds` | Check project compliance |
-| `update-catalog` | Generate CATALOG.md from frontmatter |
-| `search-learnings` | Search across all learnings |
-| `generate-index` | Auto-generate INDEX.md files |
-| `create-session` | Create timestamped session folder |
-| `find-files-to-rename` | Find unorganized files |
-
-**Setup script** (in `bin/` of this repo):
-- `setup-global-abds.sh` - Install ~/.abds/ structure with recommended categories
-- Migration scripts for existing projects
-
-### Add to PATH (Optional)
+The `abds` command provides a unified interface:
 
 ```bash
-echo 'export PATH="$HOME/.abds/bin:$PATH"' >> ~/.zshrc
-source ~/.zshrc
+abds init         # Instead of: ~/.abds/bin/init-abds
+abds search       # Instead of: ~/.abds/bin/search-learnings
+abds catalog      # Instead of: ~/.abds/bin/update-catalog
+abds validate     # Instead of: ~/.abds/bin/validate-abds
+# ... and more
 ```
+
+**Automatically installed** by `setup-global-abds.sh` to `~/.local/bin/abds`
+
+### Individual Tools
+
+All tools also available directly in `~/.abds/bin/`:
+
+| Tool | Purpose | CLI Alias |
+|------|---------|-----------|
+| `init-abds` | Initialize ABDS in project | `abds init` |
+| `validate-abds` | Check project compliance | `abds validate` |
+| `update-catalog` | Generate CATALOG.md from frontmatter | `abds catalog` |
+| `search-learnings` | Search across all learnings | `abds search` |
+| `create-session` | Create timestamped session folder | `abds session` |
+| `find-files-to-rename` | Find unorganized files | `abds find-files` |
+| `generate-index` | Auto-generate INDEX.md files | `abds generate-index` |
+
+**Setup script** (in `bin/` of this repo):
+- `setup-global-abds.sh` - Install ~/.abds/ structure with CLI wrapper
+- Migration scripts for existing projects
 
 ---
 
