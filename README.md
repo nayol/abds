@@ -26,15 +26,20 @@ ABDS is to AI agent development what **FHS** is to `/usr/bin` and **XDG** is to 
 ### Install Global ABDS
 
 ```bash
-# Run setup script
-cd abds-spec
-./bin/setup-global-abds.sh
+# Clone and install (Cargo-like pattern)
+git clone https://github.com/nayol/abds.git
+cd abds
+./install.sh
 
-# Or manually
-mkdir -p ~/.abds/{learnings,plans,bin,templates}
-cp bin/* ~/.abds/bin/
-chmod +x ~/.abds/bin/*
+# That's it! Now use `abds` globally
 ```
+
+**What it does:**
+- Creates `~/.abds/` directory structure
+- Installs CLI wrapper to `~/.local/bin/abds`
+- Sets up learnings, plans, templates
+
+**Advanced:** See `./bin/setup-global-abds.sh` for manual installation
 
 ### Initialize New Project
 
